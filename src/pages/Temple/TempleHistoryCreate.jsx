@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Save } from "lucide-react";
+import { createTempleHistory } from "../../api/templeHistory";
 import Card from "../../components/common/Card";
 import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
+import toast from "react-hot-toast";
 
 export default function TempleHistoryCreate() {
   const navigate = useNavigate();
@@ -14,14 +16,22 @@ export default function TempleHistoryCreate() {
   });
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.title.trim()) {
+      toast.error("Title is required");
+      return;
+    }
     setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      await createTempleHistory(formData);
+      toast.success("Created successfully");
       navigate("/temple-history");
-    }, 1000);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Creation failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -29,7 +39,7 @@ export default function TempleHistoryCreate() {
       <div className="flex items-center gap-4">
         <button
           onClick={() => navigate("/temple-history")}
-          className="p-2 rounded-lg hover:bg-gray-100 transition"
+          className="p-2 rounded-lg hover:bg-gray-100"
         >
           <ArrowLeft className="w-5 h-5 text-gray-600" />
         </button>
@@ -37,7 +47,6 @@ export default function TempleHistoryCreate() {
           Add Temple History
         </h1>
       </div>
-
       <Card>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -49,7 +58,6 @@ export default function TempleHistoryCreate() {
               onChange={(e) =>
                 setFormData({ ...formData, title: e.target.value })
               }
-              placeholder="Enter title"
               required
             />
           </div>
@@ -64,7 +72,6 @@ export default function TempleHistoryCreate() {
               onChange={(e) =>
                 setFormData({ ...formData, description: e.target.value })
               }
-              placeholder="Enter description"
             />
           </div>
           <div>
@@ -79,10 +86,9 @@ export default function TempleHistoryCreate() {
               placeholder="https://example.com/image.jpg"
             />
           </div>
-
           <div className="flex items-center gap-3 pt-4">
             <Button type="submit" icon={Save} disabled={loading}>
-              {loading ? "Saving..." : "Save Record"}
+              {loading ? "Saving..." : "Save"}
             </Button>
             <Button
               type="button"

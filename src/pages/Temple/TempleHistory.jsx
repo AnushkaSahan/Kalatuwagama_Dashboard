@@ -1,28 +1,46 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Plus, Pencil, Trash2, Search } from "lucide-react";
+import {
+  getTempleHistories,
+  deleteTempleHistory,
+} from "../../api/templeHistory";
 import Card from "../../components/common/Card";
 import Table from "../../components/common/Table";
 import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
-
-const mockData = [
-  {
-    id: "1",
-    title: "Foundation of Temple",
-    description: "Established during Anuradhapura era",
-    updatedAt: "2026-07-28",
-  },
-  {
-    id: "2",
-    title: "Restoration 1974",
-    description: "Major renovation by villagers",
-    updatedAt: "2026-07-25",
-  },
-];
+import toast from "react-hot-toast";
 
 export default function TempleHistory() {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const res = await getTempleHistories();
+      setData(res.data);
+    } catch (error) {
+      toast.error("Failed to load temple history");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this record?")) return;
+    try {
+      await deleteTempleHistory(id);
+      toast.success("Deleted successfully");
+      fetchData();
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Delete failed");
+    }
+  };
 
   const columns = [
     { header: "Title", accessor: "title" },
@@ -31,7 +49,7 @@ export default function TempleHistory() {
     {
       header: "Actions",
       accessor: "id",
-      cell: (id) => (
+      cell: (id, row) => (
         <div className="flex items-center gap-2">
           <Link
             to={`/temple-history/edit/${id}`}
@@ -39,7 +57,10 @@ export default function TempleHistory() {
           >
             <Pencil className="w-4 h-4 text-gray-600" />
           </Link>
-          <button className="p-1 hover:bg-gray-100 rounded text-danger">
+          <button
+            onClick={() => handleDelete(id)}
+            className="p-1 hover:bg-gray-100 rounded text-danger"
+          >
             <Trash2 className="w-4 h-4" />
           </button>
         </div>
@@ -47,8 +68,10 @@ export default function TempleHistory() {
     },
   ];
 
-  const filteredData = mockData.filter((item) =>
-    item.title.toLowerCase().includes(searchTerm.toLowerCase()),
+  const filtered = data.filter(
+    (item) =>
+      item.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.description?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
@@ -71,13 +94,15 @@ export default function TempleHistory() {
               className="pl-9"
             />
           </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
-              Export
-            </Button>
-          </div>
+          <Button variant="outline" size="sm">
+            Export
+          </Button>
         </div>
-        <Table columns={columns} data={filteredData} />
+        {loading ? (
+          <div className="text-center py-8 text-gray-500">Loading...</div>
+        ) : (
+          <Table columns={columns} data={filtered} />
+        )}
       </Card>
     </div>
   );

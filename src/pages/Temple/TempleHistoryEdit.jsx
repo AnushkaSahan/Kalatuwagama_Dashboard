@@ -1,54 +1,69 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Save } from "lucide-react";
+import { getTempleHistory, updateTempleHistory } from "../../api/templeHistory";
 import Card from "../../components/common/Card";
 import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
+import toast from "react-hot-toast";
 
 export default function TempleHistoryEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     imageUrl: "",
   });
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
-  // Simulate fetching data
   useEffect(() => {
-    // In a real app, fetch by id
-    setFormData({
-      title: "Sample Title (Edit)",
-      description: "This record is being edited.",
-      imageUrl: "https://example.com/old-image.jpg",
-    });
+    fetchData();
   }, [id]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+  const fetchData = async () => {
+    try {
+      const res = await getTempleHistory(id);
+      setFormData(res.data);
+    } catch (error) {
+      toast.error("Failed to load record");
       navigate("/temple-history");
-    }, 1000);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    try {
+      await updateTempleHistory(id, formData);
+      toast.success("Updated successfully");
+      navigate("/temple-history");
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Update failed");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (loading)
+    return <div className="text-center py-8 text-gray-500">Loading...</div>;
 
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
         <button
           onClick={() => navigate("/temple-history")}
-          className="p-2 rounded-lg hover:bg-gray-100 transition"
+          className="p-2 rounded-lg hover:bg-gray-100"
         >
           <ArrowLeft className="w-5 h-5 text-gray-600" />
         </button>
         <h1 className="text-2xl font-semibold text-gray-800">
           Edit Temple History
         </h1>
-        <span className="text-sm text-gray-500">(ID: {id})</span>
       </div>
-
       <Card>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -87,10 +102,9 @@ export default function TempleHistoryEdit() {
               }
             />
           </div>
-
           <div className="flex items-center gap-3 pt-4">
-            <Button type="submit" icon={Save} disabled={loading}>
-              {loading ? "Updating..." : "Update Record"}
+            <Button type="submit" icon={Save} disabled={submitting}>
+              {submitting ? "Updating..." : "Update"}
             </Button>
             <Button
               type="button"

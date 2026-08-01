@@ -1,4 +1,11 @@
-export default function StatCard({ title, value, icon: Icon, change, trend }) {
+export default function StatCard({
+  title,
+  value,
+  icon: Icon,
+  change,
+  trend,
+  loading = false,
+}) {
   const isUp = trend === "up";
   return (
     <div className="bg-white p-6 rounded-xl shadow-card border border-gray-100 hover:shadow-soft transition-shadow">
@@ -9,12 +16,22 @@ export default function StatCard({ title, value, icon: Icon, change, trend }) {
         </div>
       </div>
       <div className="mt-4">
-        <span className="text-2xl font-semibold text-gray-800">{value}</span>
-        <span
-          className={`ml-2 text-xs font-medium ${isUp ? "text-success" : "text-danger"}`}
-        >
-          {change}
-        </span>
+        {loading ? (
+          <div className="h-8 w-20 bg-gray-200 rounded animate-pulse"></div>
+        ) : (
+          <>
+            <span className="text-2xl font-semibold text-gray-800">
+              {value}
+            </span>
+            {change && (
+              <span
+                className={`ml-2 text-xs font-medium ${isUp ? "text-success" : "text-danger"}`}
+              >
+                {change}
+              </span>
+            )}
+          </>
+        )}
       </div>
     </div>
   );

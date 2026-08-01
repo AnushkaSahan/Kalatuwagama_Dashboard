@@ -1,4 +1,4 @@
-export default function Table({ columns, data }) {
+export default function Table({ columns, data, onRowClick }) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
@@ -18,7 +18,8 @@ export default function Table({ columns, data }) {
           {data.map((row, idx) => (
             <tr
               key={idx}
-              className="border-b border-gray-100 hover:bg-gray-50 transition"
+              className="border-b border-gray-100 hover:bg-gray-50 transition cursor-pointer"
+              onClick={() => onRowClick && onRowClick(row)}
             >
               {columns.map((col, cidx) => (
                 <td key={cidx} className="py-3 px-4 text-gray-700">
