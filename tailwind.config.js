@@ -37,6 +37,7 @@ export default {
       fontFamily: {
         sans: ["Inter", "Poppins", "sans-serif"],
         sinhala: ['"Noto Sans Sinhala"', "sans-serif"],
+        display: ['"Playfair Display"', "serif"],
       },
       borderRadius: {
         xl: "1rem",
