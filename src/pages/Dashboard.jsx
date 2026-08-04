@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  Activity,
   ArrowRight,
   Calendar,
   Clock3,
@@ -9,7 +8,6 @@ import {
   MessageSquare,
   PlusCircle,
   ShieldCheck,
-  Sparkles,
   UserPlus,
   Users,
 } from "lucide-react";
@@ -17,9 +15,11 @@ import { getContactMessages } from "../api/contactMessages";
 import { getDonationInfos } from "../api/donationInfo";
 import { getEvents } from "../api/events";
 import { getStudents } from "../api/students";
+import { useAuth } from "../context/AuthContext";
 import Button from "../components/common/Button";
 import Card from "../components/common/Card";
 import StatCard from "../components/common/StatCard";
+import TempleMark from "../components/common/TempleMark";
 import toast from "react-hot-toast";
 
 const normalizeCollection = (payload) => {
@@ -40,7 +40,14 @@ const formatDate = (value) => {
   });
 };
 
+const greetingForHour = (hour) => {
+  if (hour < 12) return "Good morning";
+  if (hour < 17) return "Good afternoon";
+  return "Good evening";
+};
+
 export default function Dashboard() {
+  const { user } = useAuth();
   const [stats, setStats] = useState({
     students: 0,
     events: 0,
@@ -78,14 +85,28 @@ export default function Dashboard() {
           donations: donations.length,
           messages: messages.length,
         });
-        setRecentMessages(messages.slice(0, 4));
+        setRecentMessages(
+          [...messages]
+            .sort(
+              (a, b) =>
+                new Date(b.createdAt || 0).getTime() -
+                new Date(a.createdAt || 0).getTime(),
+            )
+            .slice(0, 4),
+        );
 
-        const sortedEvents = [...events].sort((a, b) => {
-          const first = new Date(a.eventDate || a.date || 0).getTime();
-          const second = new Date(b.eventDate || b.date || 0).getTime();
-          return first - second;
-        });
-        setUpcomingEvents(sortedEvents.slice(0, 4));
+        const now = Date.now();
+        const upcoming = events
+          .filter((event) => {
+            const time = new Date(event.eventDate || event.date).getTime();
+            return !Number.isNaN(time) && time >= now;
+          })
+          .sort((a, b) => {
+            const first = new Date(a.eventDate || a.date).getTime();
+            const second = new Date(b.eventDate || b.date).getTime();
+            return first - second;
+          });
+        setUpcomingEvents(upcoming.slice(0, 4));
       } catch (err) {
         if (!isMounted) return;
         setError("Unable to load live dashboard data right now.");
@@ -110,38 +131,51 @@ export default function Dashboard() {
       value: stats.students,
       icon: Users,
       description: "Active learners in Daham Pasala",
+      tone: "primary",
     },
     {
       title: "Temple Events",
       value: stats.events,
       icon: Calendar,
       description: "Scheduled activities and programs",
+      tone: "accent",
     },
     {
       title: "Donation Records",
       value: stats.donations,
       icon: DollarSign,
       description: "Contribution entries captured",
+      tone: "primary",
     },
     {
       title: "New Messages",
       value: stats.messages,
       icon: MessageSquare,
       description: "Visitor inquiries and requests",
+      tone: "accent",
     },
   ];
 
+  const firstName =
+    user?.firstName && user.firstName !== "User" ? user.firstName : "";
+  const greeting = `${greetingForHour(new Date().getHours())}${
+    firstName ? `, ${firstName}` : ""
+  }`;
+
   return (
     <div className="space-y-6">
-      <div className="overflow-hidden rounded-[28px] border border-primary-100 bg-gradient-to-br from-primary-900 via-primary-800 to-stone-700 p-6 text-white shadow-soft">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+      <div className="relative overflow-hidden rounded-[28px] border border-primary-100 bg-gradient-to-br from-primary-950 via-primary-900 to-stone-800 p-6 text-white shadow-soft sm:p-8">
+        <div className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-accent-500/20 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 left-10 h-56 w-56 rounded-full bg-primary-500/10 blur-3xl" />
+
+        <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-sm text-primary-50">
-              <Sparkles className="h-4 w-4" />
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-sm text-primary-50">
+              <TempleMark className="h-4 w-4 text-accent-400" />
               Admin control center
             </div>
-            <h1 className="mt-4 text-3xl font-semibold sm:text-4xl">
-              Welcome back to the temple dashboard
+            <h1 className="mt-4 font-display text-3xl font-semibold sm:text-4xl">
+              {greeting}
             </h1>
             <p className="mt-3 text-sm leading-6 text-primary-50/90 sm:text-base">
               Monitor real administrative data, review recent activity, and stay
@@ -150,11 +184,17 @@ export default function Dashboard() {
           </div>
           <div className="rounded-2xl border border-white/20 bg-white/10 px-4 py-3 backdrop-blur">
             <div className="flex items-center gap-2 text-sm text-primary-50">
-              <Activity className="h-4 w-4" />
-              Live update
+              <ShieldCheck className="h-4 w-4 text-accent-400" />
+              {(user?.role || "Admin").toString().toLowerCase()} access
             </div>
             <p className="mt-1 text-sm font-semibold">
-              {new Date().toLocaleString()}
+              {new Date().toLocaleString("en-US", {
+                weekday: "short",
+                month: "short",
+                day: "numeric",
+                hour: "numeric",
+                minute: "2-digit",
+              })}
             </p>
           </div>
         </div>
@@ -169,6 +209,7 @@ export default function Dashboard() {
             icon={stat.icon}
             description={stat.description}
             loading={loading}
+            tone={stat.tone}
           />
         ))}
       </div>

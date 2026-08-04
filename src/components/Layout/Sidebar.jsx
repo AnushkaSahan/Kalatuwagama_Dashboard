@@ -56,6 +56,9 @@ const navigation = [
 const isChildActive = (item, pathname) =>
   item.children?.some((child) => pathname.startsWith(child.href));
 
+// Role -> avatar letter, used whenever we don't have a real first name yet
+const roleInitial = (role) => (role ? role.charAt(0).toUpperCase() : "A");
+
 export default function Sidebar({ open, setOpen }) {
   const { logout, user } = useAuth();
   const navigate = useNavigate();
@@ -91,14 +94,16 @@ export default function Sidebar({ open, setOpen }) {
     }
   };
 
-  const initial = (user?.firstName || user?.email || "A")
-    .charAt(0)
-    .toUpperCase();
+  // "User" is just AuthContext's placeholder until we fetch the real profile,
+  // so fall back to the role (ADMIN -> "A") instead of showing "U".
+  const hasRealName = user?.firstName && user.firstName !== "User";
+  const initial = hasRealName
+    ? user.firstName.charAt(0).toUpperCase()
+    : roleInitial(user?.role) || (user?.email || "A").charAt(0).toUpperCase();
 
-  const displayName =
-    user?.firstName && user?.firstName !== "User"
-      ? `${user.firstName} ${user.lastName || ""}`.trim()
-      : user?.email || "Admin";
+  const displayName = hasRealName
+    ? `${user.firstName} ${user.lastName || ""}`.trim()
+    : user?.email || "Admin";
 
   // Standard standalone link styling
   const linkClasses = ({ isActive }) =>

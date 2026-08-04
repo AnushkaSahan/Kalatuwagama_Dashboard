@@ -10,6 +10,15 @@ import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
 import toast from "react-hot-toast";
 
+const formatDateTime = (value) => {
+  if (!value) return "No date";
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "No date";
+
+  return date.toLocaleString();
+};
+
 export default function Messages() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -52,7 +61,11 @@ export default function Messages() {
     { header: "From", accessor: "fullName" },
     { header: "Email", accessor: "email" },
     { header: "Subject", accessor: "subject" },
-    { header: "Date", accessor: "createdAt" },
+    {
+      header: "Date",
+      accessor: "createdAt",
+      cell: (_, row) => formatDateTime(row.createdAt || row.created_at),
+    },
     {
       header: "Actions",
       accessor: "id",
@@ -152,7 +165,9 @@ export default function Messages() {
                   Received
                 </span>
                 <p className="text-gray-800">
-                  {new Date(selectedMessage.createdAt).toLocaleString()}
+                  {formatDateTime(
+                    selectedMessage.createdAt || selectedMessage.created_at,
+                  )}
                 </p>
               </div>
             </div>
