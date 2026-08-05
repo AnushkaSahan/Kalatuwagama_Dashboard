@@ -178,14 +178,14 @@ export default function Dashboard() {
               {greeting}
             </h1>
             <p className="mt-3 text-sm leading-6 text-primary-50/90 sm:text-base">
-              Monitor real administrative data, review recent activity, and stay
+              Monitor real administrative data, review recent activity and stay
               on top of daily temple operations from one responsive workspace.
             </p>
           </div>
           <div className="rounded-2xl border border-white/20 bg-white/10 px-4 py-3 backdrop-blur">
             <div className="flex items-center gap-2 text-sm text-primary-50">
               <ShieldCheck className="h-4 w-4 text-accent-400" />
-              {(user?.role || "Admin").toString().toLowerCase()} access
+              Admin access
             </div>
             <p className="mt-1 text-sm font-semibold">
               {new Date().toLocaleString("en-US", {

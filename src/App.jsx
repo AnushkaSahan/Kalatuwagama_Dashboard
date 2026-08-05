@@ -11,8 +11,6 @@ import Dashboard from "./pages/Dashboard";
 
 // ====== TEMPLE SECTION ======
 import TempleHistory from "./pages/Temple/TempleHistory";
-import TempleHistoryCreate from "./pages/Temple/TempleHistoryCreate";
-import TempleHistoryEdit from "./pages/Temple/TempleHistoryEdit";
 import MonkManagement from "./pages/Temple/MonkManagement";
 import MonkCreate from "./pages/Temple/MonkCreate";
 import MonkEdit from "./pages/Temple/MonkEdit";
@@ -77,8 +75,6 @@ function App() {
 
         {/* Temple */}
         <Route path="temple-history" element={<TempleHistory />} />
-        <Route path="temple-history/create" element={<TempleHistoryCreate />} />
-        <Route path="temple-history/edit/:id" element={<TempleHistoryEdit />} />
         <Route path="monks" element={<MonkManagement />} />
         <Route path="monks/create" element={<MonkCreate />} />
         <Route path="monks/edit/:id" element={<MonkEdit />} />
