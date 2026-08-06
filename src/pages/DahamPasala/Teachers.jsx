@@ -1,23 +1,41 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Plus, Pencil, Trash2, Search } from "lucide-react";
-import { getTeachers, deleteTeacher } from "../../api/teachers";
+import { Plus, Pencil, Trash2, Search, Save } from "lucide-react";
+import {
+  getTeachers,
+  createTeacher,
+  updateTeacher,
+  deleteTeacher,
+} from "../../api/teachers";
 import Card from "../../components/common/Card";
 import Table from "../../components/common/Table";
 import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
+import Modal from "../../components/common/Modal";
+import ImageUploadField from "../../components/common/ImageUploadField";
 import toast from "react-hot-toast";
+
+const emptyForm = {
+  name: "",
+  position: "",
+  phone: "",
+  imageUrl: "",
+};
 
 export default function Teachers() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [formData, setFormData] = useState(emptyForm);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const res = await getTeachers();
       setData(res.data);
@@ -25,6 +43,53 @@ export default function Teachers() {
       toast.error("Failed to load teachers");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const openCreate = () => {
+    setEditingId(null);
+    setFormData(emptyForm);
+    setModalOpen(true);
+  };
+
+  const openEdit = (record) => {
+    setEditingId(record.id);
+    setFormData({
+      name: record.name || "",
+      position: record.position || "",
+      phone: record.phone || "",
+      imageUrl: record.imageUrl || "",
+    });
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    if (submitting) return;
+    setModalOpen(false);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!formData.name.trim()) {
+      toast.error("Name is required");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      if (editingId) {
+        await updateTeacher(editingId, formData);
+        toast.success("Teacher updated successfully");
+      } else {
+        await createTeacher(formData);
+        toast.success("Teacher created successfully");
+      }
+      setModalOpen(false);
+      fetchData();
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Save failed");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -65,15 +130,17 @@ export default function Teachers() {
       accessor: "id",
       cell: (id) => (
         <div className="flex items-center gap-2">
-          <Link
-            to={`/teachers/edit/${id}`}
-            className="p-1 hover:bg-gray-100 rounded"
+          <button
+            type="button"
+            onClick={() => openEdit(data.find((item) => item.id === id))}
+            className="rounded p-1 hover:bg-gray-100"
           >
             <Pencil className="w-4 h-4 text-gray-600" />
-          </Link>
+          </button>
           <button
+            type="button"
             onClick={() => handleDelete(id)}
-            className="p-1 hover:bg-gray-100 rounded text-danger"
+            className="rounded p-1 text-danger hover:bg-gray-100"
           >
             <Trash2 className="w-4 h-4" />
           </button>
@@ -93,9 +160,9 @@ export default function Teachers() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <h1 className="text-2xl font-semibold text-gray-800">Teachers</h1>
-        <Link to="/teachers/create">
-          <Button icon={Plus}>Add Teacher</Button>
-        </Link>
+        <Button icon={Plus} onClick={openCreate}>
+          Add Teacher
+        </Button>
       </div>
 
       <Card>
@@ -119,6 +186,78 @@ export default function Teachers() {
           <Table columns={columns} data={filtered} />
         )}
       </Card>
+
+      <Modal
+        open={modalOpen}
+        onClose={closeModal}
+        title={editingId ? "Edit Teacher" : "Add Teacher"}
+        subtitle={
+          editingId
+            ? "Update the teacher details and save your changes."
+            : "Create a teacher profile from this page."
+        }
+        footer={
+          <>
+            <Button type="button" variant="ghost" onClick={closeModal}>
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              form="teacher-form"
+              icon={Save}
+              disabled={submitting}
+            >
+              {submitting ? "Saving..." : editingId ? "Update" : "Save"}
+            </Button>
+          </>
+        }
+      >
+        <form id="teacher-form" onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Name *
+            </label>
+            <Input
+              value={formData.name}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
+              required
+              autoFocus
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Position
+            </label>
+            <Input
+              value={formData.position}
+              onChange={(e) =>
+                setFormData({ ...formData, position: e.target.value })
+              }
+              placeholder="e.g. Principal, Assistant Teacher"
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Phone
+            </label>
+            <Input
+              value={formData.phone}
+              onChange={(e) =>
+                setFormData({ ...formData, phone: e.target.value })
+              }
+              placeholder="0712345678"
+            />
+          </div>
+          <ImageUploadField
+            label="Teacher Image"
+            value={formData.imageUrl}
+            onChange={(url) => setFormData({ ...formData, imageUrl: url })}
+            aspect="circle"
+          />
+        </form>
+      </Modal>
     </div>
   );
 }

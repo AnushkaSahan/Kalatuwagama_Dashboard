@@ -18,6 +18,7 @@ import Card from "../../components/common/Card";
 import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
 import Modal from "../../components/common/Modal";
+import ImageUploadField from "../../components/common/ImageUploadField";
 import toast from "react-hot-toast";
 
 const emptyForm = {
@@ -54,7 +55,6 @@ export default function Events() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState(emptyForm);
@@ -216,57 +216,62 @@ export default function Events() {
             return (
               <div
                 key={item.id}
-                className={`group flex overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-soft ${
+                className={`group overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-soft ${
                   isPast ? "opacity-70" : ""
                 }`}
               >
-                <div
-                  className={`flex w-20 shrink-0 flex-col items-center justify-center gap-0.5 ${
-                    isPast
-                      ? "bg-gray-100 text-gray-500"
-                      : "bg-gradient-to-b from-primary-900 to-primary-950 text-white"
-                  }`}
-                >
-                  <span className="text-[11px] font-semibold uppercase tracking-wider opacity-80">
-                    {month}
-                  </span>
-                  <span className="font-display text-2xl font-bold leading-none">
-                    {day}
-                  </span>
-                  <span className="text-[10px] uppercase opacity-70">
-                    {weekday}
-                  </span>
-                </div>
+                {item.imageUrl && (
+                  <div className="relative aspect-video overflow-hidden bg-gray-100">
+                    <img
+                      src={item.imageUrl}
+                      alt={item.title}
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      onError={(e) => {
+                        e.currentTarget.parentElement.style.display = "none";
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                    <div
+                      className={`absolute left-4 top-4 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider ${
+                        isPast
+                          ? "bg-white/85 text-gray-700"
+                          : "bg-primary-900/85 text-white"
+                      }`}
+                    >
+                      {month} {day}
+                    </div>
+                  </div>
+                )}
 
-                <div className="flex flex-1 flex-col justify-between p-4">
-                  <div>
-                    <div className="flex items-start justify-between gap-2">
+                <div className="flex flex-col gap-3 p-4">
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
                       <h3 className="font-display text-base font-semibold text-gray-800">
                         {item.title}
                       </h3>
-                      {isPast && (
-                        <span className="shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-gray-500">
-                          Past
-                        </span>
-                      )}
+                      <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
+                        <span>{time}</span>
+                        {item.location && (
+                          <span className="flex items-center gap-1">
+                            <MapPin className="h-3.5 w-3.5" />
+                            {item.location}
+                          </span>
+                        )}
+                        <span>{weekday}</span>
+                      </div>
                     </div>
-                    <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
-                      <span>{time}</span>
-                      {item.location && (
-                        <span className="flex items-center gap-1">
-                          <MapPin className="h-3.5 w-3.5" />
-                          {item.location}
-                        </span>
-                      )}
-                    </div>
-                    {item.description && (
-                      <p className="mt-2 text-sm text-gray-500 line-clamp-2">
-                        {item.description}
-                      </p>
+                    {isPast && (
+                      <span className="shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-gray-500">
+                        Past
+                      </span>
                     )}
                   </div>
-
-                  <div className="mt-3 flex items-center justify-end gap-1">
+                  {item.description && (
+                    <p className="text-sm text-gray-500 line-clamp-2">
+                      {item.description}
+                    </p>
+                  )}
+                  <div className="flex items-center justify-end gap-1 pt-1">
                     <button
                       type="button"
                       onClick={() => openEdit(item)}
@@ -379,18 +384,12 @@ export default function Events() {
             />
           </div>
 
-          <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Image URL
-            </label>
-            <Input
-              value={formData.imageUrl}
-              onChange={(e) =>
-                setFormData({ ...formData, imageUrl: e.target.value })
-              }
-              placeholder="https://example.com/image.jpg"
-            />
-          </div>
+          <ImageUploadField
+            label="Event Image"
+            value={formData.imageUrl}
+            onChange={(url) => setFormData({ ...formData, imageUrl: url })}
+            aspect="video"
+          />
         </form>
       </Modal>
     </div>

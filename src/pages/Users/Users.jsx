@@ -1,23 +1,36 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Plus, Pencil, Trash2, Search } from "lucide-react";
-import { getUsers, deleteUser } from "../../api/users";
+import { Plus, Pencil, Trash2, Search, Save } from "lucide-react";
+import { getUsers, createUser, updateUser, deleteUser } from "../../api/users";
 import Card from "../../components/common/Card";
 import Table from "../../components/common/Table";
 import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
+import Modal from "../../components/common/Modal";
 import toast from "react-hot-toast";
+
+const emptyForm = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  role: "VIEWER",
+};
 
 export default function Users() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [formData, setFormData] = useState(emptyForm);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const res = await getUsers();
       setData(res.data);
@@ -25,6 +38,59 @@ export default function Users() {
       toast.error("Failed to load users");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const openCreate = () => {
+    setEditingId(null);
+    setFormData(emptyForm);
+    setModalOpen(true);
+  };
+
+  const openEdit = (record) => {
+    setEditingId(record.id);
+    setFormData({
+      firstName: record.firstName || "",
+      lastName: record.lastName || "",
+      email: record.email || "",
+      password: "********",
+      role: record.role || "VIEWER",
+    });
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    if (submitting) return;
+    setModalOpen(false);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (
+      !formData.firstName.trim() ||
+      !formData.lastName.trim() ||
+      !formData.email.trim() ||
+      !formData.password.trim()
+    ) {
+      toast.error("All fields are required");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      if (editingId) {
+        await updateUser(editingId, formData);
+        toast.success("User updated successfully");
+      } else {
+        await createUser(formData);
+        toast.success("User created successfully");
+      }
+      setModalOpen(false);
+      fetchData();
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Save failed");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -65,15 +131,17 @@ export default function Users() {
       accessor: "id",
       cell: (id) => (
         <div className="flex items-center gap-2">
-          <Link
-            to={`/users/edit/${id}`}
-            className="p-1 hover:bg-gray-100 rounded"
+          <button
+            type="button"
+            onClick={() => openEdit(data.find((item) => item.id === id))}
+            className="rounded p-1 hover:bg-gray-100"
           >
             <Pencil className="w-4 h-4 text-gray-600" />
-          </Link>
+          </button>
           <button
+            type="button"
             onClick={() => handleDelete(id)}
-            className="p-1 hover:bg-gray-100 rounded text-danger"
+            className="rounded p-1 text-danger hover:bg-gray-100"
           >
             <Trash2 className="w-4 h-4" />
           </button>
@@ -93,9 +161,9 @@ export default function Users() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <h1 className="text-2xl font-semibold text-gray-800">Users</h1>
-        <Link to="/users/create">
-          <Button icon={Plus}>Add User</Button>
-        </Link>
+        <Button icon={Plus} onClick={openCreate}>
+          Add User
+        </Button>
       </div>
 
       <Card>
@@ -119,6 +187,109 @@ export default function Users() {
           <Table columns={columns} data={filtered} />
         )}
       </Card>
+
+      <Modal
+        open={modalOpen}
+        onClose={closeModal}
+        title={editingId ? "Edit User" : "Add User"}
+        subtitle={
+          editingId
+            ? "Update the user details and save your changes."
+            : "Create a user account from the Users page."
+        }
+        footer={
+          <>
+            <Button type="button" variant="ghost" onClick={closeModal}>
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              form="user-form"
+              icon={Save}
+              disabled={submitting}
+            >
+              {submitting ? "Saving..." : editingId ? "Update" : "Save"}
+            </Button>
+          </>
+        }
+      >
+        <form id="user-form" onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                First Name *
+              </label>
+              <Input
+                value={formData.firstName}
+                onChange={(e) =>
+                  setFormData({ ...formData, firstName: e.target.value })
+                }
+                required
+                autoFocus
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Last Name *
+              </label>
+              <Input
+                value={formData.lastName}
+                onChange={(e) =>
+                  setFormData({ ...formData, lastName: e.target.value })
+                }
+                required
+              />
+            </div>
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Email *
+            </label>
+            <Input
+              type="email"
+              value={formData.email}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
+              required
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Password *
+            </label>
+            <Input
+              type="password"
+              value={formData.password}
+              onChange={(e) =>
+                setFormData({ ...formData, password: e.target.value })
+              }
+              placeholder={
+                editingId
+                  ? "Password stays unchanged unless you replace the placeholder"
+                  : "Enter password"
+              }
+              required
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Role
+            </label>
+            <select
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none transition focus:border-transparent focus:ring-2 focus:ring-primary-900"
+              value={formData.role}
+              onChange={(e) =>
+                setFormData({ ...formData, role: e.target.value })
+              }
+            >
+              <option value="ADMIN">ADMIN</option>
+              <option value="EDITOR">EDITOR</option>
+              <option value="VIEWER">VIEWER</option>
+            </select>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }

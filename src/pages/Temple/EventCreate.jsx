@@ -5,6 +5,7 @@ import { createEvent } from "../../api/events";
 import Card from "../../components/common/Card";
 import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
+import ImageUploadField from "../../components/common/ImageUploadField";
 import toast from "react-hot-toast";
 
 export default function EventCreate() {
@@ -26,13 +27,11 @@ export default function EventCreate() {
     }
     setLoading(true);
     try {
-      // Convert to ISO-8601
-      const payload = {
+      await createEvent({
         ...formData,
         eventDate: new Date(formData.eventDate).toISOString(),
-      };
-      await createEvent(payload);
-      toast.success("Created");
+      });
+      toast.success("Event created");
       navigate("/events");
     } catch (error) {
       toast.error(error.response?.data?.message || "Creation failed");
@@ -45,17 +44,19 @@ export default function EventCreate() {
     <div className="space-y-6">
       <div className="flex items-center gap-4">
         <button
+          type="button"
           onClick={() => navigate("/events")}
-          className="p-2 rounded-lg hover:bg-gray-100"
+          className="rounded-lg p-2 hover:bg-gray-100"
         >
-          <ArrowLeft className="w-5 h-5 text-gray-600" />
+          <ArrowLeft className="h-5 w-5 text-gray-600" />
         </button>
         <h1 className="text-2xl font-semibold text-gray-800">Add Event</h1>
       </div>
+
       <Card>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="mb-1 block text-sm font-medium text-gray-700">
               Title *
             </label>
             <Input
@@ -63,57 +64,58 @@ export default function EventCreate() {
               onChange={(e) =>
                 setFormData({ ...formData, title: e.target.value })
               }
+              placeholder="e.g. Vesak Day Celebration"
               required
+              autoFocus
             />
           </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Event Date & Time *
+              </label>
+              <Input
+                type="datetime-local"
+                value={formData.eventDate}
+                onChange={(e) =>
+                  setFormData({ ...formData, eventDate: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Location
+              </label>
+              <Input
+                value={formData.location}
+                onChange={(e) =>
+                  setFormData({ ...formData, location: e.target.value })
+                }
+                placeholder="e.g. Main Shrine"
+              />
+            </div>
+          </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="mb-1 block text-sm font-medium text-gray-700">
               Description
             </label>
             <textarea
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-900 focus:border-transparent outline-none transition"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none transition focus:border-transparent focus:ring-2 focus:ring-primary-900"
               rows="4"
               value={formData.description}
               onChange={(e) =>
                 setFormData({ ...formData, description: e.target.value })
               }
+              placeholder="What should visitors know about this event?"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Location
-            </label>
-            <Input
-              value={formData.location}
-              onChange={(e) =>
-                setFormData({ ...formData, location: e.target.value })
-              }
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Event Date & Time *
-            </label>
-            <Input
-              type="datetime-local"
-              value={formData.eventDate}
-              onChange={(e) =>
-                setFormData({ ...formData, eventDate: e.target.value })
-              }
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Image URL
-            </label>
-            <Input
-              value={formData.imageUrl}
-              onChange={(e) =>
-                setFormData({ ...formData, imageUrl: e.target.value })
-              }
-            />
-          </div>
+          <ImageUploadField
+            label="Event Image"
+            value={formData.imageUrl}
+            onChange={(url) => setFormData({ ...formData, imageUrl: url })}
+            aspect="video"
+          />
           <div className="flex items-center gap-3 pt-4">
             <Button type="submit" icon={Save} disabled={loading}>
               {loading ? "Saving..." : "Save"}

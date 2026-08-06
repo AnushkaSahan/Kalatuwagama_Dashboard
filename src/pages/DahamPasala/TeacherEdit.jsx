@@ -5,6 +5,7 @@ import { getTeacher, updateTeacher } from "../../api/teachers";
 import Card from "../../components/common/Card";
 import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
+import ImageUploadField from "../../components/common/ImageUploadField";
 import toast from "react-hot-toast";
 
 export default function TeacherEdit() {
@@ -99,17 +100,12 @@ export default function TeacherEdit() {
               }
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Image URL
-            </label>
-            <Input
-              value={formData.imageUrl}
-              onChange={(e) =>
-                setFormData({ ...formData, imageUrl: e.target.value })
-              }
-            />
-          </div>
+          <ImageUploadField
+            label="Teacher Image"
+            value={formData.imageUrl}
+            onChange={(url) => setFormData({ ...formData, imageUrl: url })}
+            aspect="circle"
+          />
           <div className="flex items-center gap-3 pt-4">
             <Button type="submit" icon={Save} disabled={submitting}>
               {submitting ? "Updating..." : "Update"}

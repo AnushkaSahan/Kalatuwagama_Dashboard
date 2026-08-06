@@ -338,7 +338,7 @@ export default function Dashboard() {
                   Add new event
                 </Button>
               </Link>
-              <Link to="/students/create" className="block">
+              <Link to="/students" className="block">
                 <Button
                   icon={UserPlus}
                   className="w-full justify-start"
@@ -347,7 +347,7 @@ export default function Dashboard() {
                   Register student
                 </Button>
               </Link>
-              <Link to="/foundation-projects/create" className="block">
+              <Link to="/foundation-projects" className="block">
                 <Button
                   icon={PlusCircle}
                   className="w-full justify-start"

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Save } from "lucide-react";
 import { getAnnouncement, updateAnnouncement } from "../../api/announcements";
@@ -6,6 +6,14 @@ import Card from "../../components/common/Card";
 import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
 import toast from "react-hot-toast";
+
+const toLocalInput = (value) => {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  const offset = date.getTimezoneOffset();
+  return new Date(date.getTime() - offset * 60000).toISOString().slice(0, 16);
+};
 
 export default function AnnouncementEdit() {
   const { id } = useParams();
@@ -25,9 +33,11 @@ export default function AnnouncementEdit() {
   const fetchData = async () => {
     try {
       const res = await getAnnouncement(id);
-      const date = new Date(res.data.publishDate);
-      const localDate = date.toISOString().slice(0, 16);
-      setFormData({ ...res.data, publishDate: localDate });
+      setFormData({
+        title: res.data.title || "",
+        description: res.data.description || "",
+        publishDate: toLocalInput(res.data.publishDate),
+      });
     } catch (error) {
       toast.error("Failed to load announcement");
       navigate("/announcements");
@@ -38,14 +48,17 @@ export default function AnnouncementEdit() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.title.trim() || !formData.publishDate) {
+      toast.error("Title and publish date are required");
+      return;
+    }
     setSubmitting(true);
     try {
-      const payload = {
+      await updateAnnouncement(id, {
         ...formData,
         publishDate: new Date(formData.publishDate).toISOString(),
-      };
-      await updateAnnouncement(id, payload);
-      toast.success("Updated");
+      });
+      toast.success("Announcement updated");
       navigate("/announcements");
     } catch (error) {
       toast.error(error.response?.data?.message || "Update failed");
@@ -55,25 +68,27 @@ export default function AnnouncementEdit() {
   };
 
   if (loading)
-    return <div className="text-center py-8 text-gray-500">Loading...</div>;
+    return <div className="py-8 text-center text-gray-500">Loading...</div>;
 
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
         <button
+          type="button"
           onClick={() => navigate("/announcements")}
-          className="p-2 rounded-lg hover:bg-gray-100"
+          className="rounded-lg p-2 hover:bg-gray-100"
         >
-          <ArrowLeft className="w-5 h-5 text-gray-600" />
+          <ArrowLeft className="h-5 w-5 text-gray-600" />
         </button>
         <h1 className="text-2xl font-semibold text-gray-800">
           Edit Announcement
         </h1>
       </div>
+
       <Card>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="mb-1 block text-sm font-medium text-gray-700">
               Title *
             </label>
             <Input
@@ -82,15 +97,16 @@ export default function AnnouncementEdit() {
                 setFormData({ ...formData, title: e.target.value })
               }
               required
+              autoFocus
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="mb-1 block text-sm font-medium text-gray-700">
               Description
             </label>
             <textarea
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-900 focus:border-transparent outline-none transition"
-              rows="4"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none transition focus:border-transparent focus:ring-2 focus:ring-primary-900"
+              rows="5"
               value={formData.description}
               onChange={(e) =>
                 setFormData({ ...formData, description: e.target.value })
@@ -98,8 +114,8 @@ export default function AnnouncementEdit() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Publish Date *
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Publish Date & Time *
             </label>
             <Input
               type="datetime-local"

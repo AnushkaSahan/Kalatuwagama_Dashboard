@@ -5,6 +5,7 @@ import Card from "../../components/common/Card";
 import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
 import Modal from "../../components/common/Modal";
+import ImageUploadField from "../../components/common/ImageUploadField";
 import toast from "react-hot-toast";
 
 const emptyForm = { name: "", position: "", biography: "", imageUrl: "" };
@@ -331,31 +332,12 @@ export default function MonkManagement() {
             />
           </div>
 
-          <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Image URL
-            </label>
-            <Input
-              value={formData.imageUrl}
-              onChange={(e) =>
-                setFormData({ ...formData, imageUrl: e.target.value })
-              }
-              placeholder="https://example.com/photo.jpg"
-            />
-            {formData.imageUrl && (
-              <div className="mt-3 flex items-center gap-3">
-                <img
-                  src={formData.imageUrl}
-                  alt="Preview"
-                  className="h-16 w-16 rounded-full object-cover ring-2 ring-gray-100"
-                  onError={(e) => {
-                    e.currentTarget.style.display = "none";
-                  }}
-                />
-                <span className="text-xs text-gray-400">Image preview</span>
-              </div>
-            )}
-          </div>
+          <ImageUploadField
+            label="Monk Image"
+            value={formData.imageUrl}
+            onChange={(url) => setFormData({ ...formData, imageUrl: url })}
+            aspect="circle"
+          />
         </form>
       </Modal>
     </div>

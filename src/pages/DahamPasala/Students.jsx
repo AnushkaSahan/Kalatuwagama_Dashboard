@@ -1,23 +1,40 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Plus, Pencil, Trash2, Search } from "lucide-react";
-import { getStudents, deleteStudent } from "../../api/students";
+import { Plus, Pencil, Trash2, Search, Save } from "lucide-react";
+import {
+  getStudents,
+  createStudent,
+  updateStudent,
+  deleteStudent,
+} from "../../api/students";
 import Card from "../../components/common/Card";
 import Table from "../../components/common/Table";
 import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
+import Modal from "../../components/common/Modal";
 import toast from "react-hot-toast";
+
+const emptyForm = {
+  fullName: "",
+  grade: "",
+  guardianName: "",
+  guardianPhone: "",
+};
 
 export default function Students() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [formData, setFormData] = useState(emptyForm);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const res = await getStudents();
       setData(res.data);
@@ -25,6 +42,57 @@ export default function Students() {
       toast.error("Failed to load students");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const openCreate = () => {
+    setEditingId(null);
+    setFormData(emptyForm);
+    setModalOpen(true);
+  };
+
+  const openEdit = (record) => {
+    setEditingId(record.id);
+    setFormData({
+      fullName: record.fullName || "",
+      grade: record.grade || "",
+      guardianName: record.guardianName || "",
+      guardianPhone: record.guardianPhone || "",
+    });
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    if (submitting) return;
+    setModalOpen(false);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (
+      !formData.fullName.trim() ||
+      !formData.guardianName.trim() ||
+      !formData.guardianPhone.trim()
+    ) {
+      toast.error("Full name, guardian name and phone are required");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      if (editingId) {
+        await updateStudent(editingId, formData);
+        toast.success("Student updated successfully");
+      } else {
+        await createStudent(formData);
+        toast.success("Student created successfully");
+      }
+      setModalOpen(false);
+      fetchData();
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Save failed");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -50,15 +118,17 @@ export default function Students() {
       accessor: "id",
       cell: (id) => (
         <div className="flex items-center gap-2">
-          <Link
-            to={`/students/edit/${id}`}
-            className="p-1 hover:bg-gray-100 rounded"
+          <button
+            type="button"
+            onClick={() => openEdit(data.find((item) => item.id === id))}
+            className="rounded p-1 hover:bg-gray-100"
           >
             <Pencil className="w-4 h-4 text-gray-600" />
-          </Link>
+          </button>
           <button
+            type="button"
             onClick={() => handleDelete(id)}
-            className="p-1 hover:bg-gray-100 rounded text-danger"
+            className="rounded p-1 text-danger hover:bg-gray-100"
           >
             <Trash2 className="w-4 h-4" />
           </button>
@@ -78,9 +148,9 @@ export default function Students() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <h1 className="text-2xl font-semibold text-gray-800">Students</h1>
-        <Link to="/students/create">
-          <Button icon={Plus}>Add Student</Button>
-        </Link>
+        <Button icon={Plus} onClick={openCreate}>
+          Add Student
+        </Button>
       </div>
 
       <Card>
@@ -104,6 +174,85 @@ export default function Students() {
           <Table columns={columns} data={filtered} />
         )}
       </Card>
+
+      <Modal
+        open={modalOpen}
+        onClose={closeModal}
+        title={editingId ? "Edit Student" : "Add Student"}
+        subtitle={
+          editingId
+            ? "Update the student details and save your changes."
+            : "Create a student profile from this page."
+        }
+        footer={
+          <>
+            <Button type="button" variant="ghost" onClick={closeModal}>
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              form="student-form"
+              icon={Save}
+              disabled={submitting}
+            >
+              {submitting ? "Saving..." : editingId ? "Update" : "Save"}
+            </Button>
+          </>
+        }
+      >
+        <form id="student-form" onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Full Name *
+            </label>
+            <Input
+              value={formData.fullName}
+              onChange={(e) =>
+                setFormData({ ...formData, fullName: e.target.value })
+              }
+              required
+              autoFocus
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Grade
+            </label>
+            <Input
+              value={formData.grade}
+              onChange={(e) =>
+                setFormData({ ...formData, grade: e.target.value })
+              }
+              placeholder="e.g. 5, 6A"
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Guardian Name *
+            </label>
+            <Input
+              value={formData.guardianName}
+              onChange={(e) =>
+                setFormData({ ...formData, guardianName: e.target.value })
+              }
+              required
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Guardian Phone *
+            </label>
+            <Input
+              value={formData.guardianPhone}
+              onChange={(e) =>
+                setFormData({ ...formData, guardianPhone: e.target.value })
+              }
+              placeholder="0712345678"
+              required
+            />
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }

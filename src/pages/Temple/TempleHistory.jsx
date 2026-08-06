@@ -18,6 +18,7 @@ import Card from "../../components/common/Card";
 import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
 import Modal from "../../components/common/Modal";
+import ImageUploadField from "../../components/common/ImageUploadField";
 import TempleMark from "../../components/common/TempleMark";
 import toast from "react-hot-toast";
 
@@ -325,30 +326,12 @@ export default function TempleHistory() {
             />
           </div>
 
-          <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Image URL
-            </label>
-            <Input
-              value={formData.imageUrl}
-              onChange={(e) =>
-                setFormData({ ...formData, imageUrl: e.target.value })
-              }
-              placeholder="https://example.com/image.jpg"
-            />
-            {formData.imageUrl && (
-              <div className="mt-3 h-32 w-full overflow-hidden rounded-xl border border-gray-100 bg-gray-50">
-                <img
-                  src={formData.imageUrl}
-                  alt="Preview"
-                  className="h-full w-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.style.display = "none";
-                  }}
-                />
-              </div>
-            )}
-          </div>
+          <ImageUploadField
+            label="Record Image"
+            value={formData.imageUrl}
+            onChange={(url) => setFormData({ ...formData, imageUrl: url })}
+            aspect="video"
+          />
         </form>
       </Modal>
     </div>
