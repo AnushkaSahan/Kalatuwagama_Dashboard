@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   ArrowRight,
   Calendar,
@@ -29,10 +30,16 @@ const normalizeCollection = (payload) => {
   return [];
 };
 
-const formatDate = (value) => {
-  if (!value) return "No date";
+const greetingKeyForHour = (hour) => {
+  if (hour < 12) return "dashboard.goodMorning";
+  if (hour < 17) return "dashboard.goodAfternoon";
+  return "dashboard.goodEvening";
+};
+
+const formatDate = (value, noDateLabel) => {
+  if (!value) return noDateLabel;
   const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "No date";
+  if (Number.isNaN(date.getTime())) return noDateLabel;
   return date.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
@@ -40,13 +47,8 @@ const formatDate = (value) => {
   });
 };
 
-const greetingForHour = (hour) => {
-  if (hour < 12) return "Good morning";
-  if (hour < 17) return "Good afternoon";
-  return "Good evening";
-};
-
 export default function Dashboard() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [stats, setStats] = useState({
     students: 0,
@@ -127,38 +129,38 @@ export default function Dashboard() {
 
   const statItems = [
     {
-      title: "Registered Students",
+      title: t("dashboard.registeredStudents"),
       value: stats.students,
       icon: Users,
-      description: "Active learners in Daham Pasala",
+      description: t("dashboard.registeredStudentsDesc"),
       tone: "primary",
     },
     {
-      title: "Temple Events",
+      title: t("dashboard.templeEvents"),
       value: stats.events,
       icon: Calendar,
-      description: "Scheduled activities and programs",
+      description: t("dashboard.templeEventsDesc"),
       tone: "accent",
     },
     {
-      title: "Donation Records",
+      title: t("dashboard.donationRecords"),
       value: stats.donations,
       icon: DollarSign,
-      description: "Contribution entries captured",
+      description: t("dashboard.donationRecordsDesc"),
       tone: "primary",
     },
     {
-      title: "New Messages",
+      title: t("dashboard.newMessages"),
       value: stats.messages,
       icon: MessageSquare,
-      description: "Visitor inquiries and requests",
+      description: t("dashboard.newMessagesDesc"),
       tone: "accent",
     },
   ];
 
   const firstName =
     user?.firstName && user.firstName !== "User" ? user.firstName : "";
-  const greeting = `${greetingForHour(new Date().getHours())}${
+  const greeting = `${t(greetingKeyForHour(new Date().getHours()))}${
     firstName ? `, ${firstName}` : ""
   }`;
 
@@ -172,20 +174,20 @@ export default function Dashboard() {
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-sm text-primary-50">
               <TempleMark className="h-4 w-4 text-accent-400" />
-              Admin control center
+              {t("dashboard.adminControlCenter")}
             </div>
             <h1 className="mt-4 font-display text-3xl font-semibold sm:text-4xl">
               {greeting}
             </h1>
             <p className="mt-3 text-sm leading-6 text-primary-50/90 sm:text-base">
-              Monitor real administrative data, review recent activity and stay
-              on top of daily temple operations from one responsive workspace.
+              {t("dashboard.heroDescription")}
             </p>
           </div>
           <div className="rounded-2xl border border-white/20 bg-white/10 px-4 py-3 backdrop-blur">
             <div className="flex items-center gap-2 text-sm text-primary-50">
               <ShieldCheck className="h-4 w-4 text-accent-400" />
-              Admin access
+              {(user?.role || "Admin").toString().toLowerCase()}{" "}
+              {t("dashboard.access")}
             </div>
             <p className="mt-1 text-sm font-semibold">
               {new Date().toLocaleString("en-US", {
@@ -219,17 +221,17 @@ export default function Dashboard() {
           <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
             <div>
               <h3 className="text-lg font-semibold text-gray-800">
-                Recent messages
+                {t("dashboard.recentMessages")}
               </h3>
               <p className="text-sm text-gray-500">
-                Latest inquiries collected from the public portal
+                {t("dashboard.recentMessagesDesc")}
               </p>
             </div>
             <Link
               to="/messages"
               className="inline-flex items-center gap-1 text-sm font-medium text-primary-900"
             >
-              View all
+              {t("common.viewAll")}
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -250,7 +252,7 @@ export default function Dashboard() {
               </div>
             ) : recentMessages.length === 0 ? (
               <div className="rounded-2xl border border-gray-100 bg-gray-50 p-6 text-center text-sm text-gray-500">
-                No messages have been received yet.
+                {t("common.noData")}
               </div>
             ) : (
               <div className="space-y-3">
@@ -269,7 +271,10 @@ export default function Dashboard() {
                     </div>
                     <div className="flex items-center gap-2 text-sm text-gray-500">
                       <Clock3 className="h-4 w-4" />
-                      {formatDate(message.createdAt || message.created_at)}
+                      {formatDate(
+                        message.createdAt || message.created_at,
+                        t("dashboard.noDate"),
+                      )}
                     </div>
                   </div>
                 ))}
@@ -282,10 +287,10 @@ export default function Dashboard() {
           <Card className="overflow-hidden p-0">
             <div className="border-b border-gray-100 px-6 py-4">
               <h3 className="text-lg font-semibold text-gray-800">
-                Upcoming events
+                {t("dashboard.upcomingEvents")}
               </h3>
               <p className="text-sm text-gray-500">
-                Scheduled activities from the live event list
+                {t("dashboard.upcomingEventsDesc")}
               </p>
             </div>
             <div className="space-y-3 p-6">
@@ -300,7 +305,7 @@ export default function Dashboard() {
                 </div>
               ) : upcomingEvents.length === 0 ? (
                 <div className="rounded-2xl border border-gray-100 bg-gray-50 p-4 text-sm text-gray-500">
-                  No upcoming events available.
+                  {t("common.noData")}
                 </div>
               ) : (
                 upcomingEvents.map((event) => (
@@ -318,7 +323,10 @@ export default function Dashboard() {
                         </p>
                       </div>
                       <div className="rounded-full bg-primary-50 px-2.5 py-1 text-xs font-medium text-primary-900">
-                        {formatDate(event.eventDate || event.date)}
+                        {formatDate(
+                          event.eventDate || event.date,
+                          t("dashboard.noDate"),
+                        )}
                       </div>
                     </div>
                   </div>
@@ -330,12 +338,12 @@ export default function Dashboard() {
           <Card>
             <div className="flex items-center gap-2 text-sm font-semibold text-primary-900">
               <ShieldCheck className="h-4 w-4" />
-              Quick actions
+              {t("dashboard.quickActions")}
             </div>
             <div className="mt-4 space-y-3">
-              <Link to="/events/create" className="block">
+              <Link to="/events" className="block">
                 <Button icon={PlusCircle} className="w-full justify-start">
-                  Add new event
+                  {t("dashboard.addNewEvent")}
                 </Button>
               </Link>
               <Link to="/students" className="block">
@@ -344,7 +352,7 @@ export default function Dashboard() {
                   className="w-full justify-start"
                   variant="outline"
                 >
-                  Register student
+                  {t("dashboard.registerStudent")}
                 </Button>
               </Link>
               <Link to="/foundation-projects" className="block">

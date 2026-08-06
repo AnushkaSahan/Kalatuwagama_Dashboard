@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import Button from "../../components/common/Button";
@@ -8,6 +9,7 @@ import TempleMark from "../../components/common/TempleMark";
 import toast from "react-hot-toast";
 
 export default function Login() {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -209,13 +211,17 @@ export default function Login() {
         {/* caption */}
         <div className="relative z-10 border-t border-white/10 pt-6">
           <p className="font-display text-2xl leading-snug text-primary-50">
-            Kalatuwagama
-            <br />
-            Temple Administration
+            {t("login.heroTitle")
+              .split("\n")
+              .map((line, i) => (
+                <span key={i}>
+                  {line}
+                  {i === 0 && <br />}
+                </span>
+              ))}
           </p>
           <p className="mt-3 max-w-xs text-sm leading-relaxed text-primary-200/80">
-            One portal for temple affairs, Daham Pasala records, community
-            outreach and the foundation's ongoing work.
+            {t("login.heroDescription")}
           </p>
         </div>
       </div>
@@ -234,11 +240,9 @@ export default function Login() {
 
           <div className="mb-8">
             <h1 className="font-display text-3xl font-semibold text-gray-900">
-              Welcome back
+              {t("login.welcomeBack")}
             </h1>
-            <p className="mt-2 text-sm text-gray-500">
-              Sign in with your admin credentials to continue.
-            </p>
+            <p className="mt-2 text-sm text-gray-500">{t("login.subtitle")}</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
@@ -247,7 +251,7 @@ export default function Login() {
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
-                Email Address
+                {t("login.email")}
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -269,7 +273,7 @@ export default function Login() {
                 htmlFor="password"
                 className="block text-sm font-medium text-gray-700 mb-1"
               >
-                Password
+                {t("login.password")}
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -304,23 +308,23 @@ export default function Login() {
                   type="checkbox"
                   className="rounded border-gray-300 text-primary-900 focus:ring-primary-900"
                 />
-                <span className="text-gray-600">Remember me</span>
+                <span className="text-gray-600">{t("login.rememberMe")}</span>
               </label>
               <Link
                 to="/forgot-password"
                 className="text-primary-900 hover:underline font-medium"
               >
-                Forgot password?
+                {t("login.forgotPassword")}
               </Link>
             </div>
 
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Signing in..." : "Sign In"}
+              {loading ? t("login.signingIn") : t("login.signIn")}
             </Button>
           </form>
 
           <p className="mt-10 text-center text-xs text-gray-400">
-            Restricted access · Temple staff and administrators only
+            {t("login.restricted")}
           </p>
         </div>
       </div>

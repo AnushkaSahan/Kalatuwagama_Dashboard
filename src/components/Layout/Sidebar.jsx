@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   LayoutDashboard,
   Building2,
@@ -15,42 +16,42 @@ import { useAuth } from "../../context/AuthContext";
 import TempleMark from "../common/TempleMark";
 
 const navigation = [
-  { name: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
+  { key: "dashboard", icon: LayoutDashboard, href: "/dashboard" },
   {
-    name: "Temple",
+    key: "temple",
     icon: Building2,
     children: [
-      { name: "History", href: "/temple-history" },
-      { name: "Monks", href: "/monks" },
-      { name: "Events", href: "/events" },
-      { name: "Announcements", href: "/announcements" },
-      { name: "Gallery", href: "/gallery" },
-      { name: "Donations", href: "/donations" },
-      { name: "Messages", href: "/messages" },
+      { key: "history", href: "/temple-history" },
+      { key: "monks", href: "/monks" },
+      { key: "events", href: "/events" },
+      { key: "announcements", href: "/announcements" },
+      { key: "gallery", href: "/gallery" },
+      { key: "donations", href: "/donations" },
+      { key: "messages", href: "/messages" },
     ],
   },
   {
-    name: "Daham Pasala",
+    key: "dahamPasala",
     icon: GraduationCap,
     children: [
-      { name: "Teachers", href: "/teachers" },
-      { name: "Students", href: "/students" },
+      { key: "teachers", href: "/teachers" },
+      { key: "students", href: "/students" },
     ],
   },
   {
-    name: "Foundation",
+    key: "foundation",
     icon: HeartHandshake,
-    children: [{ name: "Projects", href: "/foundation-projects" }],
+    children: [{ key: "projects", href: "/foundation-projects" }],
   },
   {
-    name: "Administration",
+    key: "administration",
     icon: Users,
     children: [
-      { name: "Users", href: "/users" },
-      { name: "Roles", href: "/roles" },
+      { key: "users", href: "/users" },
+      { key: "roles", href: "/roles" },
     ],
   },
-  { name: "Settings", icon: Settings, href: "/settings" },
+  { key: "settings", icon: Settings, href: "/settings" },
 ];
 
 const isChildActive = (item, pathname) =>
@@ -60,6 +61,7 @@ const isChildActive = (item, pathname) =>
 const roleInitial = (role) => (role ? role.charAt(0).toUpperCase() : "A");
 
 export default function Sidebar({ open, setOpen }) {
+  const { t } = useTranslation();
   const { logout, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -67,22 +69,22 @@ export default function Sidebar({ open, setOpen }) {
   const [expanded, setExpanded] = useState(() =>
     navigation
       .filter((item) => item.children && isChildActive(item, location.pathname))
-      .map((item) => item.name),
+      .map((item) => item.key),
   );
 
   useEffect(() => {
     const activeGroup = navigation.find(
       (item) => item.children && isChildActive(item, location.pathname),
     );
-    if (activeGroup && !expanded.includes(activeGroup.name)) {
-      setExpanded((prev) => [...prev, activeGroup.name]);
+    if (activeGroup && !expanded.includes(activeGroup.key)) {
+      setExpanded((prev) => [...prev, activeGroup.key]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
-  const toggleGroup = (name) => {
+  const toggleGroup = (key) => {
     setExpanded((prev) =>
-      prev.includes(name) ? prev.filter((n) => n !== name) : [...prev, name],
+      prev.includes(key) ? prev.filter((n) => n !== key) : [...prev, key],
     );
   };
 
@@ -139,10 +141,10 @@ export default function Sidebar({ open, setOpen }) {
             </div>
             <div className="leading-tight">
               <p className="font-display text-base font-semibold tracking-wide text-primary-50">
-                Kalatuwagama
+                {t("sidebar.brand")}
               </p>
               <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-primary-200/70">
-                Admin Portal
+                {t("sidebar.portal")}
               </p>
             </div>
           </div>
@@ -158,16 +160,16 @@ export default function Sidebar({ open, setOpen }) {
         {/* Navigation */}
         <nav className="flex-1 space-y-1.5 overflow-y-auto px-3.5 py-5">
           {navigation.map((item) => {
-            const groupOpen = expanded.includes(item.name);
+            const groupOpen = expanded.includes(item.key);
             const groupActive = isChildActive(item, location.pathname);
 
             if (item.children) {
               return (
-                <div key={item.name} className="space-y-1">
+                <div key={item.key} className="space-y-1">
                   {/* Parent Dropdown Button */}
                   <button
                     type="button"
-                    onClick={() => toggleGroup(item.name)}
+                    onClick={() => toggleGroup(item.key)}
                     className={`flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-sm font-medium transition-all duration-200 ${
                       groupActive
                         ? "bg-primary-50/80 text-primary-950 font-semibold"
@@ -176,7 +178,7 @@ export default function Sidebar({ open, setOpen }) {
                   >
                     <span className="flex items-center gap-3">
                       <item.icon className="h-5 w-5 shrink-0" />
-                      <span>{item.name}</span>
+                      <span>{t(`sidebar.${item.key}`)}</span>
                     </span>
                     <ChevronDown
                       className={`h-4 w-4 shrink-0 text-gray-400 transition-transform duration-200 ${
@@ -198,7 +200,7 @@ export default function Sidebar({ open, setOpen }) {
                       <div className="ml-5 space-y-1 border-l-2 border-gray-100 pl-3">
                         {item.children.map((child) => (
                           <NavLink
-                            key={child.name}
+                            key={child.key}
                             to={child.href}
                             className={({ isActive }) =>
                               `block rounded-lg px-3 py-2 text-sm transition-all duration-150 ${
@@ -209,7 +211,7 @@ export default function Sidebar({ open, setOpen }) {
                             }
                             onClick={() => setOpen && setOpen(false)}
                           >
-                            <span>{child.name}</span>
+                            <span>{t(`sidebar.${child.key}`)}</span>
                           </NavLink>
                         ))}
                       </div>
@@ -222,13 +224,13 @@ export default function Sidebar({ open, setOpen }) {
             // Standalone Links (Dashboard, Settings, etc.)
             return (
               <NavLink
-                key={item.name}
+                key={item.key}
                 to={item.href}
                 className={linkClasses}
                 onClick={() => setOpen && setOpen(false)}
               >
                 <item.icon className="h-5 w-5 shrink-0" />
-                <span>{item.name}</span>
+                <span>{t(`sidebar.${item.key}`)}</span>
               </NavLink>
             );
           })}
@@ -251,7 +253,7 @@ export default function Sidebar({ open, setOpen }) {
             <button
               type="button"
               onClick={handleLogout}
-              title="Logout"
+              title={t("common.logout")}
               className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600 focus:outline-none"
             >
               <LogOut className="h-4 w-4" />

@@ -12,19 +12,13 @@ import Dashboard from "./pages/Dashboard";
 // ====== TEMPLE SECTION ======
 import TempleHistory from "./pages/Temple/TempleHistory";
 import MonkManagement from "./pages/Temple/MonkManagement";
-import MonkCreate from "./pages/Temple/MonkCreate";
-import MonkEdit from "./pages/Temple/MonkEdit";
+
 import Events from "./pages/Temple/Events";
-import EventCreate from "./pages/Temple/EventCreate";
-import EventEdit from "./pages/Temple/EventEdit";
 import Gallery from "./pages/Temple/Gallery";
-import GalleryCreate from "./pages/Temple/GalleryCreate";
-import GalleryEdit from "./pages/Temple/GalleryEdit";
+
 import DonationDetails from "./pages/Temple/DonationDetails";
 import Messages from "./pages/Temple/Messages";
 import Announcements from "./pages/Temple/Announcements";
-import AnnouncementCreate from "./pages/Temple/AnnouncementCreate";
-import AnnouncementEdit from "./pages/Temple/AnnouncementEdit";
 
 // ====== DAHAM PASALA SECTION ======
 import Teachers from "./pages/DahamPasala/Teachers";
@@ -66,19 +60,13 @@ function App() {
         {/* Temple */}
         <Route path="temple-history" element={<TempleHistory />} />
         <Route path="monks" element={<MonkManagement />} />
-        <Route path="monks/create" element={<MonkCreate />} />
-        <Route path="monks/edit/:id" element={<MonkEdit />} />
+
         <Route path="events" element={<Events />} />
-        <Route path="events/create" element={<EventCreate />} />
-        <Route path="events/edit/:id" element={<EventEdit />} />
         <Route path="gallery" element={<Gallery />} />
-        <Route path="gallery/create" element={<GalleryCreate />} />
-        <Route path="gallery/edit/:id" element={<GalleryEdit />} />
+
         <Route path="donations" element={<DonationDetails />} />
         <Route path="messages" element={<Messages />} />
         <Route path="announcements" element={<Announcements />} />
-        <Route path="announcements/create" element={<AnnouncementCreate />} />
-        <Route path="announcements/edit/:id" element={<AnnouncementEdit />} />
 
         {/* Daham Pasala */}
         <Route path="teachers" element={<Teachers />} />
