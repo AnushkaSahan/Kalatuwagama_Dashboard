@@ -135,7 +135,7 @@ export default function FoundationProjects() {
             className="w-12 h-12 object-cover rounded"
           />
         ) : (
-          <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center text-xs text-gray-500">
+          <div className="w-12 h-12 bg-gray-200 dark:bg-dark-700 rounded flex items-center justify-center text-xs text-gray-500 dark:text-gray-400">
             No img
           </div>
         ),
@@ -148,14 +148,14 @@ export default function FoundationProjects() {
           <button
             type="button"
             onClick={() => openEdit(data.find((item) => item.id === id))}
-            className="rounded p-1 hover:bg-gray-100"
+            className="rounded p-1 hover:bg-gray-100 dark:hover:bg-dark-800"
           >
-            <Pencil className="w-4 h-4 text-gray-600" />
+            <Pencil className="w-4 h-4 text-gray-600 dark:text-gray-300" />
           </button>
           <button
             type="button"
             onClick={() => handleDelete(id)}
-            className="rounded p-1 text-danger hover:bg-gray-100"
+            className="rounded p-1 text-danger hover:bg-gray-100 dark:hover:bg-dark-800"
           >
             <Trash2 className="w-4 h-4" />
           </button>
@@ -173,7 +173,7 @@ export default function FoundationProjects() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-2xl font-semibold text-gray-800">
+        <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
           Foundation Projects
         </h1>
         <Button icon={Plus} onClick={openCreate}>
@@ -197,7 +197,9 @@ export default function FoundationProjects() {
           </Button>
         </div>
         {loading ? (
-          <div className="text-center py-8 text-gray-500">Loading...</div>
+          <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+            Loading...
+          </div>
         ) : (
           <Table columns={columns} data={filtered} />
         )}
@@ -234,7 +236,7 @@ export default function FoundationProjects() {
           className="space-y-4"
         >
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
               Title *
             </label>
             <Input
@@ -247,11 +249,11 @@ export default function FoundationProjects() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
               Description
             </label>
             <textarea
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none transition focus:border-transparent focus:ring-2 focus:ring-primary-900"
+              className="w-full rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-dark-850 dark:text-gray-100 px-3 py-2 outline-none transition focus:border-transparent focus:ring-2 focus:ring-primary-900"
               rows="4"
               value={formData.description}
               onChange={(e) =>
@@ -261,7 +263,7 @@ export default function FoundationProjects() {
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
+              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Start Date
               </label>
               <Input
@@ -273,7 +275,7 @@ export default function FoundationProjects() {
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
+              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 End Date
               </label>
               <Input

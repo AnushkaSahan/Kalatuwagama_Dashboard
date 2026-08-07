@@ -53,13 +53,13 @@ export default function ImageUploadField({
 
   return (
     <div>
-      <label className="mb-1 block text-sm font-medium text-gray-700">
+      <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
         {label} {required && "*"}
       </label>
 
       {value ? (
         <div
-          className={`group relative ${size} overflow-hidden border border-gray-200 bg-gray-50`}
+          className={`group relative ${size} overflow-hidden border border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-dark-900`}
         >
           <img
             src={value}
@@ -83,7 +83,7 @@ export default function ImageUploadField({
           type="button"
           onClick={() => fileInputRef.current?.click()}
           disabled={uploading}
-          className={`flex ${size} flex-col items-center justify-center gap-1.5 border-2 border-dashed border-gray-200 bg-gray-50 text-gray-400 transition-colors hover:border-primary-300 hover:bg-primary-50/50 hover:text-primary-700`}
+          className={`flex ${size} flex-col items-center justify-center gap-1.5 rounded-2xl border-2 border-dashed border-gray-300 bg-gray-50/60 text-gray-400 transition-all duration-200 hover:border-primary-400 hover:bg-primary-50/50 hover:text-primary-700 dark:border-gray-700 dark:bg-dark-900 dark:text-gray-500 dark:hover:border-primary-500/60 dark:hover:bg-primary-500/10 dark:hover:text-primary-400`}
         >
           {uploading ? (
             <Loader2 className="h-5 w-5 animate-spin" />
@@ -109,16 +109,16 @@ export default function ImageUploadField({
           type="button"
           onClick={() => fileInputRef.current?.click()}
           disabled={uploading}
-          className="inline-flex items-center gap-1.5 text-xs font-medium text-primary-900 hover:underline disabled:opacity-50"
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-primary-900 hover:underline disabled:opacity-50 dark:text-primary-400"
         >
           <Upload className="h-3.5 w-3.5" />
           {uploading ? "Uploading..." : value ? "Replace file" : "Choose file"}
         </button>
-        <span className="text-gray-300">|</span>
+        <span className="text-gray-300 dark:text-gray-600">|</span>
         <button
           type="button"
           onClick={() => setShowUrlInput((v) => !v)}
-          className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 hover:text-gray-700"
+          className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
         >
           <LinkIcon className="h-3.5 w-3.5" />
           Use image URL
@@ -131,7 +131,7 @@ export default function ImageUploadField({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder="https://example.com/image.jpg"
-          className="mt-2 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition focus:border-transparent focus:ring-2 focus:ring-primary-900"
+          className="mt-2 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition focus:border-transparent focus:ring-2 focus:ring-primary-900 dark:border-gray-600 dark:bg-dark-850 dark:text-gray-100 dark:placeholder-gray-500"
         />
       )}
     </div>

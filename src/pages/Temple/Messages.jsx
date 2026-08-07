@@ -73,13 +73,13 @@ export default function Messages() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => handleView(row)}
-            className="p-1 hover:bg-gray-100 rounded"
+            className="p-1 hover:bg-gray-100 dark:hover:bg-dark-800 rounded"
           >
-            <Eye className="w-4 h-4 text-gray-600" />
+            <Eye className="w-4 h-4 text-gray-600 dark:text-gray-300" />
           </button>
           <button
             onClick={() => handleDelete(id)}
-            className="p-1 hover:bg-gray-100 rounded text-danger"
+            className="p-1 hover:bg-gray-100 dark:hover:bg-dark-800 rounded text-danger"
           >
             <Trash2 className="w-4 h-4" />
           </button>
@@ -98,10 +98,12 @@ export default function Messages() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-2xl font-semibold text-gray-800">
+        <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
           Contact Messages
         </h1>
-        <span className="text-sm text-gray-500">Total: {data.length}</span>
+        <span className="text-sm text-gray-500 dark:text-gray-400">
+          Total: {data.length}
+        </span>
       </div>
       <Card>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
@@ -116,7 +118,9 @@ export default function Messages() {
           </div>
         </div>
         {loading ? (
-          <div className="text-center py-8 text-gray-500">Loading...</div>
+          <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+            Loading...
+          </div>
         ) : (
           <Table columns={columns} data={filtered} />
         )}
@@ -125,46 +129,56 @@ export default function Messages() {
       {/* Message Detail Modal */}
       {showModal && selectedMessage && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl max-w-2xl w-full p-6 shadow-soft">
+          <div className="bg-white dark:bg-dark-850 rounded-xl max-w-2xl w-full p-6 shadow-soft">
             <div className="flex justify-between items-start mb-4">
-              <h2 className="text-xl font-semibold text-gray-800">
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
                 Message Details
               </h2>
               <button
                 onClick={() => setShowModal(false)}
-                className="p-2 hover:bg-gray-100 rounded-lg"
+                className="p-2 hover:bg-gray-100 dark:hover:bg-dark-800 rounded-lg"
               >
                 ✕
               </button>
             </div>
             <div className="space-y-3">
               <div>
-                <span className="text-sm font-medium text-gray-500">From</span>
-                <p className="text-gray-800">{selectedMessage.fullName}</p>
+                <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                  From
+                </span>
+                <p className="text-gray-800 dark:text-gray-100">
+                  {selectedMessage.fullName}
+                </p>
               </div>
               <div>
-                <span className="text-sm font-medium text-gray-500">Email</span>
-                <p className="text-gray-800">{selectedMessage.email}</p>
+                <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                  Email
+                </span>
+                <p className="text-gray-800 dark:text-gray-100">
+                  {selectedMessage.email}
+                </p>
               </div>
               <div>
-                <span className="text-sm font-medium text-gray-500">
+                <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
                   Subject
                 </span>
-                <p className="text-gray-800">{selectedMessage.subject}</p>
+                <p className="text-gray-800 dark:text-gray-100">
+                  {selectedMessage.subject}
+                </p>
               </div>
               <div>
-                <span className="text-sm font-medium text-gray-500">
+                <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
                   Message
                 </span>
-                <p className="text-gray-800 bg-gray-50 p-3 rounded-lg whitespace-pre-wrap">
+                <p className="text-gray-800 dark:text-gray-100 bg-gray-50 dark:bg-dark-800 p-3 rounded-lg whitespace-pre-wrap">
                   {selectedMessage.message}
                 </p>
               </div>
               <div>
-                <span className="text-sm font-medium text-gray-500">
+                <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
                   Received
                 </span>
-                <p className="text-gray-800">
+                <p className="text-gray-800 dark:text-gray-100">
                   {formatDateTime(
                     selectedMessage.createdAt || selectedMessage.created_at,
                   )}

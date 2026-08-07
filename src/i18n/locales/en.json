@@ -39,7 +39,9 @@
     "settings": "Settings"
   },
   "topnav": {
-    "searchPlaceholder": "Search records, events, students…"
+    "searchPlaceholder": "Search records, events, students…",
+    "switchToDark": "Switch to dark mode",
+    "switchToLight": "Switch to light mode"
   },
   "login": {
     "brandTagline": "Temple Administration",
@@ -79,7 +81,7 @@
     "upcoming": "Upcoming",
     "past": "Past",
     "studentsByGrade": "Students by Grade",
-    "studentsByGradeDesc": "Live distribution of registered students",
+    "studentsByGradeDesc": "Daham Pasala enrollment across grades",
     "eventsOverview": "Events Overview",
     "eventsOverviewDesc": "Upcoming vs. Past Activities",
     "messagesActivity": "Message Activity",
@@ -88,8 +90,6 @@
     "addNewEvent": "Add new event",
     "registerStudent": "Register student",
     "createFoundationProject": "Create foundation project",
-    "studentsByGrade": "Students by Grade",
-    "studentsByGradeDesc": "Daham Pasala enrollment across grades",
     "messagesTrend": "Messages Received",
     "messagesTrendDesc": "Inquiries over the last 14 days",
     "projectStatus": "Foundation Project Status",

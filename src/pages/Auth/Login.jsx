@@ -35,7 +35,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen lg:grid lg:grid-cols-5 bg-white">
+    <div className="min-h-screen lg:grid lg:grid-cols-5 bg-white dark:bg-dark-950">
       {/* Left panel — temple visual */}
       <div className="relative hidden lg:col-span-2 lg:flex flex-col justify-between overflow-hidden bg-gradient-to-b from-primary-950 via-primary-900 to-primary-950 px-12 py-14">
         {/* ambient glow */}
@@ -230,26 +230,28 @@ export default function Login() {
       <div className="flex items-center justify-center px-6 py-12 lg:col-span-3">
         <div className="w-full max-w-sm">
           <div className="mb-9 lg:hidden flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-900 text-white">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-900 text-white dark:bg-primary-700">
               <TempleMark className="w-6 h-6" />
             </div>
-            <span className="font-display text-lg tracking-wide text-primary-900">
+            <span className="font-display text-lg tracking-wide text-primary-900 dark:text-primary-300">
               Kalatuwagama
             </span>
           </div>
 
           <div className="mb-8">
-            <h1 className="font-display text-3xl font-semibold text-gray-900">
+            <h1 className="font-display text-3xl font-semibold text-gray-900 dark:text-white">
               {t("login.welcomeBack")}
             </h1>
-            <p className="mt-2 text-sm text-gray-500">{t("login.subtitle")}</p>
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+              {t("login.subtitle")}
+            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300"
               >
                 {t("login.email")}
               </label>
@@ -271,7 +273,7 @@ export default function Login() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300"
               >
                 {t("login.password")}
               </label>
@@ -308,11 +310,13 @@ export default function Login() {
                   type="checkbox"
                   className="rounded border-gray-300 text-primary-900 focus:ring-primary-900"
                 />
-                <span className="text-gray-600">{t("login.rememberMe")}</span>
+                <span className="text-gray-600 dark:text-gray-400">
+                  {t("login.rememberMe")}
+                </span>
               </label>
               <Link
                 to="/forgot-password"
-                className="text-primary-900 hover:underline font-medium"
+                className="text-primary-900 hover:underline font-medium dark:text-primary-400"
               >
                 {t("login.forgotPassword")}
               </Link>
@@ -323,7 +327,7 @@ export default function Login() {
             </Button>
           </form>
 
-          <p className="mt-10 text-center text-xs text-gray-400">
+          <p className="mt-10 text-center text-xs text-gray-400 dark:text-gray-500">
             {t("login.restricted")}
           </p>
         </div>

@@ -3,8 +3,15 @@
 @tailwind utilities;
 
 @layer base {
+  * {
+    @apply border-gray-200 dark:border-gray-800;
+  }
+
   body {
-    @apply bg-gray-50 text-gray-800 antialiased;
+    @apply bg-gray-50 text-gray-800 antialiased dark:bg-dark-950 dark:text-gray-100;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
   }
   html[lang="si"] body {
     font-family: "Noto Sans Sinhala", "Inter", sans-serif;
@@ -15,9 +22,64 @@
   input,
   select,
   textarea {
-    @apply border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-900 focus:border-transparent;
+    @apply border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-900 focus:border-transparent dark:border-gray-700 dark:bg-dark-850 dark:text-gray-100 dark:placeholder-gray-500;
+    transition:
+      background-color 0.3s ease,
+      border-color 0.3s ease,
+      box-shadow 0.2s ease;
   }
   button {
-    @apply focus:outline-none focus:ring-2 focus:ring-primary-900 focus:ring-offset-2;
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-900 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-dark-950;
+  }
+}
+
+@layer components {
+  .glass {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+  }
+  .dark .glass {
+    background: rgba(30, 33, 38, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* Premium custom scrollbar for both themes */
+  ::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-gray-300 hover:bg-gray-400 dark:bg-dark-600 dark:hover:bg-dark-500;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    transition: background-color 0.3s ease;
+  }
+}
+
+@layer utilities {
+  /* Gradient text */
+  .text-gradient-accent {
+    @apply bg-clip-text text-transparent bg-gradient-accent;
+  }
+  .text-gradient-primary {
+    @apply bg-clip-text text-transparent bg-gradient-primary;
+  }
+
+  /* Recharts dark-mode tooltip styling */
+  .dark .recharts-default-tooltip {
+    @apply bg-dark-850 !important;
+    border: 1px solid #32373d !important;
+  }
+  .dark .recharts-default-tooltip .recharts-tooltip-item,
+  .dark .recharts-default-tooltip .recharts-tooltip-label {
+    color: #f4f5f6 !important;
+  }
+  .dark .recharts-cartesian-axis-tick text {
+    fill: #9aa1ab !important;
   }
 }

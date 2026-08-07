@@ -121,14 +121,14 @@ export default function Students() {
           <button
             type="button"
             onClick={() => openEdit(data.find((item) => item.id === id))}
-            className="rounded p-1 hover:bg-gray-100"
+            className="rounded p-1 hover:bg-gray-100 dark:hover:bg-dark-800"
           >
-            <Pencil className="w-4 h-4 text-gray-600" />
+            <Pencil className="w-4 h-4 text-gray-600 dark:text-gray-300" />
           </button>
           <button
             type="button"
             onClick={() => handleDelete(id)}
-            className="rounded p-1 text-danger hover:bg-gray-100"
+            className="rounded p-1 text-danger hover:bg-gray-100 dark:hover:bg-dark-800"
           >
             <Trash2 className="w-4 h-4" />
           </button>
@@ -147,7 +147,9 @@ export default function Students() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-2xl font-semibold text-gray-800">Students</h1>
+        <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
+          Students
+        </h1>
         <Button icon={Plus} onClick={openCreate}>
           Add Student
         </Button>
@@ -169,7 +171,9 @@ export default function Students() {
           </Button>
         </div>
         {loading ? (
-          <div className="text-center py-8 text-gray-500">Loading...</div>
+          <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+            Loading...
+          </div>
         ) : (
           <Table columns={columns} data={filtered} />
         )}
@@ -202,7 +206,7 @@ export default function Students() {
       >
         <form id="student-form" onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
               Full Name *
             </label>
             <Input
@@ -215,7 +219,7 @@ export default function Students() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
               Grade
             </label>
             <Input
@@ -227,7 +231,7 @@ export default function Students() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
               Guardian Name *
             </label>
             <Input
@@ -239,7 +243,7 @@ export default function Students() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
               Guardian Phone *
             </label>
             <Input

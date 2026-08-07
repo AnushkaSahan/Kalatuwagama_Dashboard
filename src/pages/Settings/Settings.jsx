@@ -61,10 +61,12 @@ export default function Settings() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-2xl font-semibold text-gray-800">
+        <h1 className="font-display text-2xl font-semibold text-gray-800 dark:text-gray-100">
           {t("settings.title")}
         </h1>
-        <p className="mt-1 text-sm text-gray-500">{t("settings.subtitle")}</p>
+        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          {t("settings.subtitle")}
+        </p>
       </div>
 
       <form onSubmit={handleSubmit}>
@@ -72,13 +74,13 @@ export default function Settings() {
           <div className="space-y-6 lg:col-span-2">
             {/* General Settings */}
             <Card>
-              <h3 className="mb-4 flex items-center gap-2 text-lg font-medium text-gray-800">
-                <Globe className="h-5 w-5 text-primary-900" />
+              <h3 className="mb-4 flex items-center gap-2 text-lg font-medium text-gray-800 dark:text-gray-100">
+                <Globe className="h-5 w-5 text-primary-900 dark:text-primary-400" />
                 {t("settings.generalSettings")}
               </h3>
               <div className="space-y-4">
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-gray-700">
+                  <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     {t("settings.siteName")}
                   </label>
                   <Input
@@ -89,7 +91,7 @@ export default function Settings() {
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-gray-700">
+                  <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     {t("settings.siteEmail")}
                   </label>
                   <Input
@@ -101,7 +103,7 @@ export default function Settings() {
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-gray-700">
+                  <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     {t("settings.phoneNumber")}
                   </label>
                   <Input
@@ -112,11 +114,11 @@ export default function Settings() {
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-gray-700">
+                  <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     {t("settings.address")}
                   </label>
                   <textarea
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none transition focus:border-transparent focus:ring-2 focus:ring-primary-900"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none transition focus:border-transparent focus:ring-2 focus:ring-primary-900 dark:border-gray-600 dark:bg-dark-850 dark:text-gray-100 dark:placeholder-gray-500"
                     rows="2"
                     value={formData.address}
                     onChange={(e) =>
@@ -125,11 +127,11 @@ export default function Settings() {
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-gray-700">
+                  <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     {t("settings.timezone")}
                   </label>
                   <select
-                    className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none transition focus:border-transparent focus:ring-2 focus:ring-primary-900"
+                    className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none transition focus:border-transparent focus:ring-2 focus:ring-primary-900 dark:border-gray-600 dark:bg-dark-850 dark:text-gray-100"
                     value={formData.timezone}
                     onChange={(e) =>
                       setFormData({ ...formData, timezone: e.target.value })
@@ -146,16 +148,16 @@ export default function Settings() {
             {/* Location */}
             <Card className="overflow-hidden !p-0">
               <div className="p-6 pb-4">
-                <h3 className="flex items-center gap-2 text-lg font-medium text-gray-800">
-                  <MapPin className="h-5 w-5 text-primary-900" />
+                <h3 className="flex items-center gap-2 text-lg font-medium text-gray-800 dark:text-gray-100">
+                  <MapPin className="h-5 w-5 text-primary-900 dark:text-primary-400" />
                   {t("settings.location")}
                 </h3>
-                <p className="mt-1 text-sm text-gray-500">
+                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                   {t("settings.locationDesc")}
                 </p>
               </div>
 
-              <div className="h-56 w-full border-y border-gray-100 bg-gray-100">
+              <div className="h-56 w-full border-y border-gray-100 bg-gray-100 dark:border-gray-800 dark:bg-dark-900">
                 <iframe
                   title="Temple location"
                   src={mapEmbedSrc}
@@ -168,7 +170,7 @@ export default function Settings() {
 
               <div className="space-y-4 p-6">
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-gray-700">
+                  <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     {t("settings.placeName")}
                   </label>
                   <Input
@@ -179,10 +181,10 @@ export default function Settings() {
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-gray-700">
+                  <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     {t("settings.coordinates")}
                   </label>
-                  <p className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 font-mono text-sm text-gray-600">
+                  <p className="rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 font-mono text-sm text-gray-600 dark:border-gray-700 dark:bg-dark-900 dark:text-gray-300">
                     {TEMPLE_LOCATION.latitude}, {TEMPLE_LOCATION.longitude}
                   </p>
                 </div>
@@ -190,7 +192,7 @@ export default function Settings() {
                   href={TEMPLE_LOCATION.mapsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-sm font-medium text-primary-900 hover:underline"
+                  className="inline-flex items-center gap-1.5 text-sm font-medium text-primary-900 hover:underline dark:text-primary-400"
                 >
                   {t("settings.openInMaps")}
                   <ExternalLink className="h-3.5 w-3.5" />
@@ -203,11 +205,11 @@ export default function Settings() {
           <div className="space-y-6">
             {/* Language */}
             <Card>
-              <h3 className="mb-1 flex items-center gap-2 text-lg font-medium text-gray-800">
-                <Languages className="h-5 w-5 text-primary-900" />
+              <h3 className="mb-1 flex items-center gap-2 text-lg font-medium text-gray-800 dark:text-gray-100">
+                <Languages className="h-5 w-5 text-primary-900 dark:text-primary-400" />
                 {t("settings.language")}
               </h3>
-              <p className="mb-4 text-sm text-gray-500">
+              <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
                 {t("settings.languageDesc")}
               </p>
               <div className="space-y-2">
@@ -220,20 +222,20 @@ export default function Settings() {
                       onClick={() => changeLanguage(lang.code)}
                       className={`flex w-full items-center justify-between rounded-xl border px-4 py-3 text-left transition-all duration-150 ${
                         active
-                          ? "border-primary-900 bg-primary-50 text-primary-950"
-                          : "border-gray-200 text-gray-600 hover:border-primary-200 hover:bg-gray-50"
+                          ? "border-primary-900 bg-primary-50 text-primary-950 dark:border-primary-500 dark:bg-primary-500/15 dark:text-primary-200"
+                          : "border-gray-200 text-gray-600 hover:border-primary-200 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:border-primary-500/40 dark:hover:bg-dark-800"
                       }`}
                     >
                       <span>
                         <span className="block text-sm font-medium">
                           {lang.nativeLabel}
                         </span>
-                        <span className="block text-xs text-gray-400">
+                        <span className="block text-xs text-gray-400 dark:text-gray-500">
                           {lang.label}
                         </span>
                       </span>
                       {active && (
-                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary-900 text-white">
+                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary-900 text-white dark:bg-primary-500">
                           <Check className="h-3 w-3" />
                         </span>
                       )}
@@ -244,13 +246,13 @@ export default function Settings() {
             </Card>
 
             <Card>
-              <h3 className="mb-4 flex items-center gap-2 text-lg font-medium text-gray-800">
-                <Bell className="h-5 w-5 text-primary-900" />
+              <h3 className="mb-4 flex items-center gap-2 text-lg font-medium text-gray-800 dark:text-gray-100">
+                <Bell className="h-5 w-5 text-primary-900 dark:text-primary-400" />
                 {t("settings.notifications")}
               </h3>
               <div className="space-y-3">
                 <label className="flex cursor-pointer items-center justify-between">
-                  <span className="text-sm text-gray-700">
+                  <span className="text-sm text-gray-700 dark:text-gray-300">
                     {t("settings.enableEmailNotifications")}
                   </span>
                   <input
@@ -269,12 +271,12 @@ export default function Settings() {
             </Card>
 
             <Card>
-              <h3 className="mb-4 text-lg font-medium text-gray-800">
+              <h3 className="mb-4 text-lg font-medium text-gray-800 dark:text-gray-100">
                 {t("settings.maintenance")}
               </h3>
               <div className="space-y-3">
                 <label className="flex cursor-pointer items-center justify-between">
-                  <span className="text-sm text-gray-700">
+                  <span className="text-sm text-gray-700 dark:text-gray-300">
                     {t("settings.maintenanceMode")}
                   </span>
                   <input
@@ -289,7 +291,7 @@ export default function Settings() {
                     className="rounded border-gray-300 text-danger focus:ring-danger"
                   />
                 </label>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-gray-500 dark:text-gray-400">
                   {t("settings.maintenanceDesc")}
                 </p>
               </div>

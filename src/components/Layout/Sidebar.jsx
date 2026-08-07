@@ -104,8 +104,8 @@ export default function Sidebar({ open, setOpen }) {
   const linkClasses = ({ isActive }) =>
     `group flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition-all duration-200 ${
       isActive
-        ? "bg-primary-900 text-white shadow-sm shadow-primary-900/20"
-        : "text-gray-600 hover:bg-gray-100/80 hover:text-gray-900"
+        ? "bg-gradient-primary text-white shadow-lg shadow-primary-900/25"
+        : "text-gray-600 hover:bg-gray-100/80 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-dark-800 dark:hover:text-gray-100"
     }`;
 
   return (
@@ -122,14 +122,16 @@ export default function Sidebar({ open, setOpen }) {
         className={`
           fixed inset-y-0 left-0 z-50 flex h-screen w-72 flex-col border-r border-gray-200/80 bg-white
           transition-transform duration-300 ease-in-out lg:static lg:translate-x-0
+          dark:border-white/5 dark:bg-dark-900
           ${open ? "translate-x-0" : "-translate-x-full"}
         `}
       >
         {/* Brand header */}
-        <div className="relative flex h-20 shrink-0 items-center justify-between overflow-hidden border-b border-gray-100 bg-gradient-to-br from-primary-950 via-primary-900 to-primary-800 px-5">
+        <div className="relative flex h-20 shrink-0 items-center justify-between overflow-hidden border-b border-gray-100 bg-gradient-hero px-5 dark:border-white/5">
           <div className="pointer-events-none absolute -right-8 -top-10 h-28 w-28 rounded-full bg-accent-500/20 blur-2xl" />
+          <div className="pointer-events-none absolute -bottom-16 -left-10 h-32 w-32 rounded-full bg-primary-500/20 blur-3xl" />
           <div className="relative z-10 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-accent-500/40 bg-white/5 text-accent-400">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-accent-500/40 bg-white/5 text-accent-400 shadow-lg shadow-accent-500/10">
               <TempleMark className="h-5 w-5" />
             </div>
             <div className="leading-tight">
@@ -165,8 +167,8 @@ export default function Sidebar({ open, setOpen }) {
                     onClick={() => toggleGroup(item.key)}
                     className={`flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-sm font-medium transition-all duration-200 ${
                       groupActive
-                        ? "bg-primary-50/80 text-primary-950 font-semibold"
-                        : "text-gray-600 hover:bg-gray-100/80 hover:text-gray-900"
+                        ? "bg-primary-50/80 text-primary-950 font-semibold dark:bg-primary-500/10 dark:text-primary-200"
+                        : "text-gray-600 hover:bg-gray-100/80 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-dark-800 dark:hover:text-gray-100"
                     }`}
                   >
                     <span className="flex items-center gap-3">
@@ -174,8 +176,10 @@ export default function Sidebar({ open, setOpen }) {
                       <span>{t(`sidebar.${item.key}`)}</span>
                     </span>
                     <ChevronDown
-                      className={`h-4 w-4 shrink-0 text-gray-400 transition-transform duration-200 ${
-                        groupOpen ? "rotate-180 text-gray-600" : ""
+                      className={`h-4 w-4 shrink-0 text-gray-400 transition-transform duration-200 dark:text-gray-500 ${
+                        groupOpen
+                          ? "rotate-180 text-gray-600 dark:text-gray-300"
+                          : ""
                       }`}
                     />
                   </button>
@@ -190,7 +194,7 @@ export default function Sidebar({ open, setOpen }) {
                   >
                     <div className="min-h-0 pt-1">
                       {/* Vertical line aligned perfectly under the parent icon center */}
-                      <div className="ml-5 space-y-1 border-l-2 border-gray-100 pl-3">
+                      <div className="ml-5 space-y-1 border-l-2 border-gray-100 pl-3 dark:border-white/5">
                         {item.children.map((child) => (
                           <NavLink
                             key={child.key}
@@ -198,8 +202,8 @@ export default function Sidebar({ open, setOpen }) {
                             className={({ isActive }) =>
                               `block rounded-lg px-3 py-2 text-sm transition-all duration-150 ${
                                 isActive
-                                  ? "bg-primary-900 font-medium text-white shadow-sm"
-                                  : "text-gray-500 hover:bg-primary-50/60 hover:text-primary-900"
+                                  ? "bg-gradient-primary font-medium text-white shadow-md shadow-primary-900/20"
+                                  : "text-gray-500 hover:bg-primary-50/60 hover:text-primary-900 dark:text-gray-400 dark:hover:bg-primary-500/10 dark:hover:text-primary-200"
                               }`
                             }
                             onClick={() => setOpen && setOpen(false)}
@@ -230,11 +234,11 @@ export default function Sidebar({ open, setOpen }) {
         </nav>
 
         {/* Logout */}
-        <div className="shrink-0 border-t border-gray-100 p-3.5">
+        <div className="shrink-0 border-t border-gray-100 p-3.5 dark:border-white/5">
           <button
             type="button"
             onClick={handleLogout}
-            className="flex w-full items-center justify-center gap-2 rounded-xl px-3.5 py-2.5 text-sm font-medium text-gray-500 transition-colors hover:bg-red-50 hover:text-red-600 focus:outline-none"
+            className="flex w-full items-center justify-center gap-2 rounded-xl px-3.5 py-2.5 text-sm font-medium text-gray-500 transition-colors hover:bg-red-50 hover:text-red-600 focus:outline-none dark:text-gray-400 dark:hover:bg-red-500/10 dark:hover:text-red-400"
           >
             <LogOut className="h-4 w-4" />
             {t("common.logout")}

@@ -237,9 +237,10 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      <div className="relative overflow-hidden rounded-[28px] border border-primary-100 bg-gradient-to-br from-primary-950 via-primary-900 to-stone-800 p-6 text-white shadow-soft sm:p-8">
-        <div className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-accent-500/20 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-24 left-10 h-56 w-56 rounded-full bg-primary-500/10 blur-3xl" />
+      <div className="relative overflow-hidden rounded-[28px] border border-primary-100/50 bg-gradient-hero p-6 text-white shadow-soft ring-1 ring-white/5 sm:p-8">
+        <div className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-accent-500/25 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 left-10 h-56 w-56 rounded-full bg-primary-500/15 blur-3xl" />
+        <div className="pointer-events-none absolute inset-0 opacity-[0.04] [background-image:radial-gradient(circle_at_1px_1px,#fff_1px,transparent_0)] [background-size:24px_24px]" />
 
         <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
@@ -275,7 +276,7 @@ export default function Dashboard() {
       </div>
 
       {error && (
-        <div className="rounded-2xl border border-red-100 bg-red-50 p-4 text-sm text-red-600">
+        <div className="rounded-2xl border border-red-100 bg-red-50 p-4 text-sm text-red-600 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-400">
           {error}
         </div>
       )}
@@ -297,17 +298,17 @@ export default function Dashboard() {
       {/* Charts — derived from the same live records above */}
       <div className="grid gap-6 xl:grid-cols-3">
         <Card>
-          <h3 className="text-sm font-semibold text-gray-800">
+          <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-100">
             {t("dashboard.studentsByGrade")}
           </h3>
-          <p className="mt-0.5 text-xs text-gray-500">
+          <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
             {t("dashboard.studentsByGradeDesc")}
           </p>
           <div className="mt-4 h-52">
             {loading ? (
-              <div className="h-full w-full animate-pulse rounded-xl bg-gray-100" />
+              <div className="h-full w-full animate-pulse rounded-xl bg-gray-100 dark:bg-dark-800" />
             ) : studentsByGrade.length === 0 ? (
-              <div className="flex h-full items-center justify-center text-sm text-gray-400">
+              <div className="flex h-full items-center justify-center text-sm text-gray-400 dark:text-gray-500">
                 {t("common.noData")}
               </div>
             ) : (
@@ -352,17 +353,17 @@ export default function Dashboard() {
         </Card>
 
         <Card>
-          <h3 className="text-sm font-semibold text-gray-800">
+          <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-100">
             {t("dashboard.eventsOverview")}
           </h3>
-          <p className="mt-0.5 text-xs text-gray-500">
+          <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
             {t("dashboard.eventsOverviewDesc")}
           </p>
           <div className="mt-2 h-52">
             {loading ? (
-              <div className="h-full w-full animate-pulse rounded-xl bg-gray-100" />
+              <div className="h-full w-full animate-pulse rounded-xl bg-gray-100 dark:bg-dark-800" />
             ) : stats.events === 0 ? (
-              <div className="flex h-full items-center justify-center text-sm text-gray-400">
+              <div className="flex h-full items-center justify-center text-sm text-gray-400 dark:text-gray-500">
                 {t("common.noData")}
               </div>
             ) : (
@@ -391,7 +392,7 @@ export default function Dashboard() {
               </ResponsiveContainer>
             )}
           </div>
-          <div className="mt-1 flex items-center justify-center gap-5 text-xs text-gray-500">
+          <div className="mt-1 flex items-center justify-center gap-5 text-xs text-gray-500 dark:text-gray-400">
             <span className="flex items-center gap-1.5">
               <span className="h-2 w-2 rounded-full bg-primary-900" />
               {t("dashboard.upcoming")}
@@ -404,15 +405,15 @@ export default function Dashboard() {
         </Card>
 
         <Card>
-          <h3 className="text-sm font-semibold text-gray-800">
+          <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-100">
             {t("dashboard.messagesActivity")}
           </h3>
-          <p className="mt-0.5 text-xs text-gray-500">
+          <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
             {t("dashboard.messagesActivityDesc")}
           </p>
           <div className="mt-4 h-52">
             {loading ? (
-              <div className="h-full w-full animate-pulse rounded-xl bg-gray-100" />
+              <div className="h-full w-full animate-pulse rounded-xl bg-gray-100 dark:bg-dark-800" />
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={messageActivity}>
@@ -459,11 +460,11 @@ export default function Dashboard() {
       {/* Upcoming events + quick actions */}
       <div className="grid gap-6 xl:grid-cols-[1.3fr_0.7fr]">
         <Card className="!p-0 overflow-hidden">
-          <div className="border-b border-gray-100 px-6 py-4">
-            <h3 className="text-lg font-semibold text-gray-800">
+          <div className="border-b border-gray-100 px-6 py-4 dark:border-gray-800">
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
               {t("dashboard.upcomingEvents")}
             </h3>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
               {t("dashboard.upcomingEventsDesc")}
             </p>
           </div>
@@ -474,12 +475,12 @@ export default function Dashboard() {
                 {[1, 2].map((item) => (
                   <div
                     key={item}
-                    className="h-40 animate-pulse rounded-2xl bg-gray-100"
+                    className="h-40 animate-pulse rounded-2xl bg-gray-100 dark:bg-dark-800"
                   />
                 ))}
               </div>
             ) : upcomingEvents.length === 0 ? (
-              <div className="rounded-2xl border border-gray-100 bg-gray-50 p-6 text-center text-sm text-gray-500">
+              <div className="rounded-2xl border border-gray-100 bg-gray-50 p-6 text-center text-sm text-gray-500 dark:border-gray-800 dark:bg-dark-900 dark:text-gray-400">
                 {t("common.noData")}
               </div>
             ) : (
@@ -527,7 +528,7 @@ export default function Dashboard() {
         </Card>
 
         <Card>
-          <div className="flex items-center gap-2 text-sm font-semibold text-primary-900">
+          <div className="flex items-center gap-2 text-sm font-semibold text-primary-900 dark:text-primary-400">
             <ShieldCheck className="h-4 w-4" />
             {t("dashboard.quickActions")}
           </div>

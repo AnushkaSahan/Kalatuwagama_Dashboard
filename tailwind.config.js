@@ -1,9 +1,24 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: "class",
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       colors: {
+        dark: {
+          50: "#f4f5f6",
+          100: "#e4e6e9",
+          200: "#c5c9cf",
+          300: "#9aa1ab",
+          400: "#69727e",
+          500: "#4b535e",
+          600: "#3b4149",
+          700: "#32373d",
+          800: "#292d33",
+          850: "#23262b",
+          900: "#1e2126",
+          950: "#141619",
+        },
         primary: {
           50: "#fdf2f2",
           100: "#fce4e4",
@@ -47,6 +62,36 @@ export default {
       boxShadow: {
         soft: "0 10px 40px -10px rgba(0, 0, 0, 0.08)",
         card: "0 4px 20px -8px rgba(0, 0, 0, 0.06)",
+        glass: "0 8px 32px rgba(31, 15, 15, 0.12)",
+        glow: "0 0 0 1px rgba(212, 175, 55, 0.15), 0 8px 30px -6px rgba(212, 175, 55, 0.35)",
+        "glow-red":
+          "0 0 0 1px rgba(111, 29, 27, 0.12), 0 8px 30px -6px rgba(111, 29, 27, 0.35)",
+        "card-hover":
+          "0 20px 50px -20px rgba(0, 0, 0, 0.18), 0 4px 12px -4px rgba(0, 0, 0, 0.06)",
+      },
+      backgroundImage: {
+        "gradient-primary":
+          "linear-gradient(135deg, #7f2323 0%, #6F1D1B 45%, #4a1311 100%)",
+        "gradient-accent":
+          "linear-gradient(135deg, #e1c77a 0%, #D4AF37 50%, #9c7a27 100%)",
+        "gradient-hero":
+          "radial-gradient(1200px 600px at 20% -10%, rgba(212,175,55,0.28) 0%, transparent 55%), linear-gradient(135deg, #4a1311 0%, #6F1D1B 50%, #2a0d0c 100%)",
+        "gradient-surface":
+          "linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0) 100%)",
+      },
+      keyframes: {
+        "fade-in": {
+          "0%": { opacity: "0", transform: "translateY(8px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "scale-in": {
+          "0%": { opacity: "0", transform: "scale(0.96)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
+      },
+      animation: {
+        "fade-in": "fade-in 0.4s ease-out both",
+        "scale-in": "scale-in 0.25s ease-out both",
       },
     },
   },

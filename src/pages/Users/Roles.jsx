@@ -18,17 +18,18 @@ export default function Roles() {
       name: "ADMIN",
       description:
         "Full system access – can create, update, delete all resources.",
-      color: "bg-primary-100 text-primary-900",
+      color:
+        "bg-primary-100 text-primary-900 dark:bg-primary-500/20 dark:text-primary-300",
     },
     {
       name: "EDITOR",
       description: "Can create and update content, but cannot delete.",
-      color: "bg-blue-100 text-blue-700",
+      color: "bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-300",
     },
     {
       name: "VIEWER",
       description: "Read-only access to all public data.",
-      color: "bg-gray-100 text-gray-700",
+      color: "bg-gray-100 text-gray-700 dark:bg-dark-700 dark:text-gray-300",
     },
   ];
 
@@ -68,7 +69,7 @@ export default function Roles() {
       accessor: "name",
       cell: (name) => (
         <span
-          className={`px-2 py-1 rounded-full text-xs font-medium ${roleDefinitions.find((r) => r.name === name)?.color || "bg-gray-100"}`}
+          className={`px-2 py-1 rounded-full text-xs font-medium ${roleDefinitions.find((r) => r.name === name)?.color || "bg-gray-100 dark:bg-dark-700 dark:text-gray-300"}`}
         >
           {name}
         </span>
@@ -85,10 +86,12 @@ export default function Roles() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-2xl font-semibold text-gray-800">
+        <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
           Roles & Permissions
         </h1>
-        <div className="text-sm text-gray-500">Total users: {users.length}</div>
+        <div className="text-sm text-gray-500 dark:text-gray-400">
+          Total users: {users.length}
+        </div>
       </div>
 
       <Card>
@@ -107,7 +110,9 @@ export default function Roles() {
           </Button>
         </div>
         {loading ? (
-          <div className="text-center py-8 text-gray-500">Loading...</div>
+          <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+            Loading...
+          </div>
         ) : (
           <Table columns={columns} data={filtered} />
         )}
@@ -117,7 +122,7 @@ export default function Roles() {
         {roleDefinitions.map((role) => (
           <div
             key={role.name}
-            className="bg-white p-6 rounded-xl shadow-card border border-gray-100"
+            className="bg-white p-6 rounded-xl shadow-card border border-gray-100 dark:border-white/5 dark:bg-dark-850"
           >
             <div className="flex items-center justify-between">
               <span
@@ -125,11 +130,13 @@ export default function Roles() {
               >
                 {role.name}
               </span>
-              <span className="text-2xl font-semibold text-gray-800">
+              <span className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
                 {roleCounts[role.name] || 0}
               </span>
             </div>
-            <p className="mt-2 text-sm text-gray-500">{role.description}</p>
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+              {role.description}
+            </p>
           </div>
         ))}
       </div>

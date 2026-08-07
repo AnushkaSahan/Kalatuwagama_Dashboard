@@ -35,26 +35,26 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-dark-950 p-4">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-soft p-8">
+        <div className="bg-white dark:bg-dark-850 rounded-2xl shadow-soft p-8 dark:ring-1 dark:ring-gray-800">
           {/* Back to login */}
           <Link
             to="/login"
-            className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 mb-6"
+            className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 mb-6"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to login
           </Link>
 
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary-900 text-white font-bold text-3xl">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary-900 text-white font-bold text-3xl dark:bg-primary-700">
               K
             </div>
-            <h2 className="mt-4 text-2xl font-semibold text-gray-800">
+            <h2 className="mt-4 text-2xl font-semibold text-gray-800 dark:text-gray-100">
               Reset Password
             </h2>
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
               Enter your email and we’ll send you a link to reset your password.
             </p>
           </div>
@@ -67,7 +67,7 @@ export default function ForgotPassword() {
               </div>
               <Link
                 to="/login"
-                className="inline-block text-primary-900 hover:underline font-medium"
+                className="inline-block text-primary-900 hover:underline font-medium dark:text-primary-400"
               >
                 Return to login
               </Link>
@@ -77,7 +77,7 @@ export default function ForgotPassword() {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
                 >
                   Email Address
                 </label>

@@ -116,10 +116,10 @@ export default function Users() {
         <span
           className={`px-2 py-1 rounded-full text-xs font-medium ${
             role === "ADMIN"
-              ? "bg-primary-100 text-primary-900"
+              ? "bg-primary-100 text-primary-900 dark:bg-primary-500/20 dark:text-primary-300"
               : role === "EDITOR"
-                ? "bg-blue-100 text-blue-700"
-                : "bg-gray-100 text-gray-700"
+                ? "bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-300"
+                : "bg-gray-100 text-gray-700 dark:bg-dark-700 dark:text-gray-300"
           }`}
         >
           {role}
@@ -134,14 +134,14 @@ export default function Users() {
           <button
             type="button"
             onClick={() => openEdit(data.find((item) => item.id === id))}
-            className="rounded p-1 hover:bg-gray-100"
+            className="rounded p-1 hover:bg-gray-100 dark:hover:bg-dark-800"
           >
-            <Pencil className="w-4 h-4 text-gray-600" />
+            <Pencil className="w-4 h-4 text-gray-600 dark:text-gray-300" />
           </button>
           <button
             type="button"
             onClick={() => handleDelete(id)}
-            className="rounded p-1 text-danger hover:bg-gray-100"
+            className="rounded p-1 text-danger hover:bg-gray-100 dark:hover:bg-dark-800"
           >
             <Trash2 className="w-4 h-4" />
           </button>
@@ -160,7 +160,9 @@ export default function Users() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-2xl font-semibold text-gray-800">Users</h1>
+        <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
+          Users
+        </h1>
         <Button icon={Plus} onClick={openCreate}>
           Add User
         </Button>
@@ -182,7 +184,9 @@ export default function Users() {
           </Button>
         </div>
         {loading ? (
-          <div className="text-center py-8 text-gray-500">Loading...</div>
+          <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+            Loading...
+          </div>
         ) : (
           <Table columns={columns} data={filtered} />
         )}
@@ -216,7 +220,7 @@ export default function Users() {
         <form id="user-form" onSubmit={handleSubmit} className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
+              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 First Name *
               </label>
               <Input
@@ -229,7 +233,7 @@ export default function Users() {
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
+              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Last Name *
               </label>
               <Input
@@ -242,7 +246,7 @@ export default function Users() {
             </div>
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
               Email *
             </label>
             <Input
@@ -255,7 +259,7 @@ export default function Users() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
               Password *
             </label>
             <Input
@@ -273,11 +277,11 @@ export default function Users() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
               Role
             </label>
             <select
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none transition focus:border-transparent focus:ring-2 focus:ring-primary-900"
+              className="w-full rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-dark-850 dark:text-gray-100 px-3 py-2 outline-none transition focus:border-transparent focus:ring-2 focus:ring-primary-900"
               value={formData.role}
               onChange={(e) =>
                 setFormData({ ...formData, role: e.target.value })

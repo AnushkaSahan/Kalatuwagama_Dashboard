@@ -105,25 +105,31 @@ export default function Profile() {
   };
 
   if (loading)
-    return <div className="text-center py-8 text-gray-500">Loading...</div>;
+    return (
+      <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+        Loading...
+      </div>
+    );
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-2xl font-semibold text-gray-800">Profile</h1>
+        <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
+          Profile
+        </h1>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Profile Information */}
         <Card className="lg:col-span-2">
-          <h3 className="text-lg font-medium text-gray-800 mb-4 flex items-center gap-2">
-            <User className="w-5 h-5 text-primary-900" />
+          <h3 className="text-lg font-medium text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">
+            <User className="w-5 h-5 text-primary-900 dark:text-primary-400" />
             Personal Information
           </h3>
           <form onSubmit={handleProfileUpdate} className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   First Name
                 </label>
                 <Input
@@ -135,7 +141,7 @@ export default function Profile() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Last Name
                 </label>
                 <Input
@@ -148,11 +154,11 @@ export default function Profile() {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Email
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" />
                 <Input
                   type="email"
                   value={formData.email}
@@ -165,11 +171,15 @@ export default function Profile() {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Role
               </label>
-              <Input value={formData.role} disabled className="bg-gray-50" />
-              <p className="text-xs text-gray-400 mt-1">
+              <Input
+                value={formData.role}
+                disabled
+                className="bg-gray-50 dark:bg-dark-800"
+              />
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
                 Role cannot be changed here.
               </p>
             </div>
@@ -184,13 +194,13 @@ export default function Profile() {
         {/* Change Password */}
         <div className="space-y-6">
           <Card>
-            <h3 className="text-lg font-medium text-gray-800 mb-4 flex items-center gap-2">
-              <Lock className="w-5 h-5 text-primary-900" />
+            <h3 className="text-lg font-medium text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">
+              <Lock className="w-5 h-5 text-primary-900 dark:text-primary-400" />
               Change Password
             </h3>
             <form onSubmit={handlePasswordChange} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Current Password
                 </label>
                 <Input
@@ -206,7 +216,7 @@ export default function Profile() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   New Password
                 </label>
                 <Input
@@ -222,7 +232,7 @@ export default function Profile() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Confirm New Password
                 </label>
                 <Input

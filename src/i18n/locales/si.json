@@ -39,7 +39,9 @@
     "settings": "සැකසුම්"
   },
   "topnav": {
-    "searchPlaceholder": "වාර්තා, උත්සව, සිසුන් සොයන්න…"
+    "searchPlaceholder": "වාර්තා, උත්සව, සිසුන් සොයන්න…",
+    "switchToDark": "අඳුරු ප්‍රකාරයට මාරු වන්න",
+    "switchToLight": "ආලෝක ප්‍රකාරයට මාරු වන්න"
   },
   "login": {
     "brandTagline": "විහාරස්ථාන පරිපාලනය",
