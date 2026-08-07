@@ -1,17 +1,30 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
-  ArrowRight,
   Calendar,
-  Clock3,
   DollarSign,
+  MapPin,
   MessageSquare,
   PlusCircle,
   ShieldCheck,
   UserPlus,
   Users,
 } from "lucide-react";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Line,
+  LineChart,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { getContactMessages } from "../api/contactMessages";
 import { getDonationInfos } from "../api/donationInfo";
 import { getEvents } from "../api/events";
@@ -47,8 +60,10 @@ const formatDate = (value, noDateLabel) => {
   });
 };
 
+const CHART_COLORS = { primary: "#6F1D1B", accent: "#D4AF37" };
+
 export default function Dashboard() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { user } = useAuth();
   const [stats, setStats] = useState({
     students: 0,
@@ -57,7 +72,9 @@ export default function Dashboard() {
     messages: 0,
   });
   const [loading, setLoading] = useState(true);
-  const [recentMessages, setRecentMessages] = useState([]);
+  const [studentsData, setStudentsData] = useState([]);
+  const [eventsData, setEventsData] = useState([]);
+  const [messagesData, setMessagesData] = useState([]);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [error, setError] = useState("");
 
@@ -87,15 +104,9 @@ export default function Dashboard() {
           donations: donations.length,
           messages: messages.length,
         });
-        setRecentMessages(
-          [...messages]
-            .sort(
-              (a, b) =>
-                new Date(b.createdAt || 0).getTime() -
-                new Date(a.createdAt || 0).getTime(),
-            )
-            .slice(0, 4),
-        );
+        setStudentsData(students);
+        setEventsData(events);
+        setMessagesData(messages);
 
         const now = Date.now();
         const upcoming = events
@@ -164,6 +175,66 @@ export default function Dashboard() {
     firstName ? `, ${firstName}` : ""
   }`;
 
+  // --- Chart data, derived from the same real records already fetched above ---
+
+  const studentsByGrade = useMemo(() => {
+    const counts = {};
+    studentsData.forEach((student) => {
+      const grade = student.grade?.trim() || t("dashboard.unspecified");
+      counts[grade] = (counts[grade] || 0) + 1;
+    });
+    return Object.entries(counts)
+      .map(([grade, count]) => ({ grade, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 8);
+  }, [studentsData, t]);
+
+  const eventsOverview = useMemo(() => {
+    const now = Date.now();
+    let upcomingCount = 0;
+    let pastCount = 0;
+    eventsData.forEach((event) => {
+      const time = new Date(event.eventDate || event.date).getTime();
+      if (!Number.isNaN(time) && time >= now) upcomingCount += 1;
+      else pastCount += 1;
+    });
+    return [
+      {
+        name: t("dashboard.upcoming"),
+        value: upcomingCount,
+        fill: CHART_COLORS.primary,
+      },
+      {
+        name: t("dashboard.past"),
+        value: pastCount,
+        fill: CHART_COLORS.accent,
+      },
+    ];
+  }, [eventsData, t]);
+
+  const messageActivity = useMemo(() => {
+    const locale = i18n.language === "si" ? "si-LK" : "en-US";
+    const days = Array.from({ length: 7 }).map((_, i) => {
+      const d = new Date();
+      d.setHours(0, 0, 0, 0);
+      d.setDate(d.getDate() - (6 - i));
+      return d;
+    });
+    const buckets = days.map((d) => ({
+      label: d.toLocaleDateString(locale, { weekday: "short" }),
+      key: d.toDateString(),
+      count: 0,
+    }));
+    messagesData.forEach((message) => {
+      const date = new Date(message.createdAt || message.created_at);
+      if (Number.isNaN(date.getTime())) return;
+      const key = date.toDateString();
+      const bucket = buckets.find((b) => b.key === key);
+      if (bucket) bucket.count += 1;
+    });
+    return buckets;
+  }, [messagesData, i18n.language]);
+
   return (
     <div className="space-y-6">
       <div className="relative overflow-hidden rounded-[28px] border border-primary-100 bg-gradient-to-br from-primary-950 via-primary-900 to-stone-800 p-6 text-white shadow-soft sm:p-8">
@@ -186,7 +257,8 @@ export default function Dashboard() {
           <div className="rounded-2xl border border-white/20 bg-white/10 px-4 py-3 backdrop-blur">
             <div className="flex items-center gap-2 text-sm text-primary-50">
               <ShieldCheck className="h-4 w-4 text-accent-400" />
-              {(user?.role || "Admin").toString().toLowerCase()}{" "}
+              {(user?.role || "Admin").toString().charAt(0).toUpperCase() +
+                (user?.role || "Admin").toString().slice(1).toLowerCase()}{" "}
               {t("dashboard.access")}
             </div>
             <p className="mt-1 text-sm font-semibold">
@@ -202,6 +274,12 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {error && (
+        <div className="rounded-2xl border border-red-100 bg-red-50 p-4 text-sm text-red-600">
+          {error}
+        </div>
+      )}
+
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {statItems.map((stat) => (
           <StatCard
@@ -216,65 +294,230 @@ export default function Dashboard() {
         ))}
       </div>
 
+      {/* Charts — derived from the same live records above */}
+      <div className="grid gap-6 xl:grid-cols-3">
+        <Card>
+          <h3 className="text-sm font-semibold text-gray-800">
+            {t("dashboard.studentsByGrade")}
+          </h3>
+          <p className="mt-0.5 text-xs text-gray-500">
+            {t("dashboard.studentsByGradeDesc")}
+          </p>
+          <div className="mt-4 h-52">
+            {loading ? (
+              <div className="h-full w-full animate-pulse rounded-xl bg-gray-100" />
+            ) : studentsByGrade.length === 0 ? (
+              <div className="flex h-full items-center justify-center text-sm text-gray-400">
+                {t("common.noData")}
+              </div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={studentsByGrade}>
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    vertical={false}
+                    stroke="#F1F1EF"
+                  />
+                  <XAxis
+                    dataKey="grade"
+                    tick={{ fontSize: 11, fill: "#6b7280" }}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    allowDecimals={false}
+                    tick={{ fontSize: 11, fill: "#6b7280" }}
+                    axisLine={false}
+                    tickLine={false}
+                    width={24}
+                  />
+                  <Tooltip
+                    cursor={{ fill: "#FBF6E8" }}
+                    contentStyle={{
+                      borderRadius: 12,
+                      border: "1px solid #f1f1ef",
+                      fontSize: 12,
+                    }}
+                  />
+                  <Bar
+                    dataKey="count"
+                    fill={CHART_COLORS.primary}
+                    radius={[6, 6, 0, 0]}
+                    maxBarSize={32}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+          </div>
+        </Card>
+
+        <Card>
+          <h3 className="text-sm font-semibold text-gray-800">
+            {t("dashboard.eventsOverview")}
+          </h3>
+          <p className="mt-0.5 text-xs text-gray-500">
+            {t("dashboard.eventsOverviewDesc")}
+          </p>
+          <div className="mt-2 h-52">
+            {loading ? (
+              <div className="h-full w-full animate-pulse rounded-xl bg-gray-100" />
+            ) : stats.events === 0 ? (
+              <div className="flex h-full items-center justify-center text-sm text-gray-400">
+                {t("common.noData")}
+              </div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={eventsOverview}
+                    dataKey="value"
+                    nameKey="name"
+                    innerRadius={50}
+                    outerRadius={75}
+                    paddingAngle={3}
+                  >
+                    {eventsOverview.map((entry) => (
+                      <Cell key={entry.name} fill={entry.fill} stroke="none" />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{
+                      borderRadius: 12,
+                      border: "1px solid #f1f1ef",
+                      fontSize: 12,
+                    }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            )}
+          </div>
+          <div className="mt-1 flex items-center justify-center gap-5 text-xs text-gray-500">
+            <span className="flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-primary-900" />
+              {t("dashboard.upcoming")}
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-accent-500" />
+              {t("dashboard.past")}
+            </span>
+          </div>
+        </Card>
+
+        <Card>
+          <h3 className="text-sm font-semibold text-gray-800">
+            {t("dashboard.messagesActivity")}
+          </h3>
+          <p className="mt-0.5 text-xs text-gray-500">
+            {t("dashboard.messagesActivityDesc")}
+          </p>
+          <div className="mt-4 h-52">
+            {loading ? (
+              <div className="h-full w-full animate-pulse rounded-xl bg-gray-100" />
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={messageActivity}>
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    vertical={false}
+                    stroke="#F1F1EF"
+                  />
+                  <XAxis
+                    dataKey="label"
+                    tick={{ fontSize: 11, fill: "#6b7280" }}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    allowDecimals={false}
+                    tick={{ fontSize: 11, fill: "#6b7280" }}
+                    axisLine={false}
+                    tickLine={false}
+                    width={24}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      borderRadius: 12,
+                      border: "1px solid #f1f1ef",
+                      fontSize: 12,
+                    }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="count"
+                    stroke={CHART_COLORS.accent}
+                    strokeWidth={2.5}
+                    dot={{ r: 3, fill: CHART_COLORS.accent }}
+                    activeDot={{ r: 5 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            )}
+          </div>
+        </Card>
+      </div>
+
+      {/* Upcoming events + quick actions */}
       <div className="grid gap-6 xl:grid-cols-[1.3fr_0.7fr]">
-        <Card className="overflow-hidden p-0">
-          <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800">
-                {t("dashboard.recentMessages")}
-              </h3>
-              <p className="text-sm text-gray-500">
-                {t("dashboard.recentMessagesDesc")}
-              </p>
-            </div>
-            <Link
-              to="/messages"
-              className="inline-flex items-center gap-1 text-sm font-medium text-primary-900"
-            >
-              {t("common.viewAll")}
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+        <Card className="!p-0 overflow-hidden">
+          <div className="border-b border-gray-100 px-6 py-4">
+            <h3 className="text-lg font-semibold text-gray-800">
+              {t("dashboard.upcomingEvents")}
+            </h3>
+            <p className="text-sm text-gray-500">
+              {t("dashboard.upcomingEventsDesc")}
+            </p>
           </div>
 
           <div className="p-6">
             {loading ? (
-              <div className="space-y-3">
-                {[1, 2, 3].map((item) => (
+              <div className="grid gap-4 sm:grid-cols-2">
+                {[1, 2].map((item) => (
                   <div
                     key={item}
-                    className="h-14 animate-pulse rounded-xl bg-gray-100"
+                    className="h-40 animate-pulse rounded-2xl bg-gray-100"
                   />
                 ))}
               </div>
-            ) : error ? (
-              <div className="rounded-2xl border border-red-100 bg-red-50 p-4 text-sm text-red-600">
-                {error}
-              </div>
-            ) : recentMessages.length === 0 ? (
+            ) : upcomingEvents.length === 0 ? (
               <div className="rounded-2xl border border-gray-100 bg-gray-50 p-6 text-center text-sm text-gray-500">
                 {t("common.noData")}
               </div>
             ) : (
-              <div className="space-y-3">
-                {recentMessages.map((message) => (
+              <div className="grid gap-4 sm:grid-cols-2">
+                {upcomingEvents.map((event) => (
                   <div
-                    key={message.id}
-                    className="flex flex-col gap-2 rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+                    key={event.id}
+                    className="group relative flex h-40 flex-col justify-end overflow-hidden rounded-2xl border border-gray-100 shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-soft"
                   >
-                    <div>
-                      <p className="font-semibold text-gray-800">
-                        {message.fullName || "Anonymous"}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        {message.subject || "No subject provided"}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
-                      <Clock3 className="h-4 w-4" />
+                    {event.imageUrl ? (
+                      <img
+                        src={event.imageUrl}
+                        alt={event.title}
+                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                        }}
+                      />
+                    ) : (
+                      <div className="absolute inset-0 bg-gradient-to-br from-primary-900 to-primary-700" />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+                    <div className="absolute right-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-semibold text-primary-900 backdrop-blur">
                       {formatDate(
-                        message.createdAt || message.created_at,
+                        event.eventDate || event.date,
                         t("dashboard.noDate"),
                       )}
+                    </div>
+
+                    <div className="relative z-10 p-4">
+                      <p className="font-display text-base font-semibold leading-tight text-white">
+                        {event.title || "Untitled event"}
+                      </p>
+                      <p className="mt-1 flex items-center gap-1 text-xs text-white/80">
+                        <MapPin className="h-3 w-3" />
+                        {event.location || "Location not provided"}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -283,90 +526,37 @@ export default function Dashboard() {
           </div>
         </Card>
 
-        <div className="space-y-6">
-          <Card className="overflow-hidden p-0">
-            <div className="border-b border-gray-100 px-6 py-4">
-              <h3 className="text-lg font-semibold text-gray-800">
-                {t("dashboard.upcomingEvents")}
-              </h3>
-              <p className="text-sm text-gray-500">
-                {t("dashboard.upcomingEventsDesc")}
-              </p>
-            </div>
-            <div className="space-y-3 p-6">
-              {loading ? (
-                <div className="space-y-2">
-                  {[1, 2].map((item) => (
-                    <div
-                      key={item}
-                      className="h-12 animate-pulse rounded-xl bg-gray-100"
-                    />
-                  ))}
-                </div>
-              ) : upcomingEvents.length === 0 ? (
-                <div className="rounded-2xl border border-gray-100 bg-gray-50 p-4 text-sm text-gray-500">
-                  {t("common.noData")}
-                </div>
-              ) : (
-                upcomingEvents.map((event) => (
-                  <div
-                    key={event.id}
-                    className="rounded-2xl border border-gray-100 bg-gray-50 px-4 py-3"
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="font-semibold text-gray-800">
-                          {event.title || "Untitled event"}
-                        </p>
-                        <p className="mt-1 text-sm text-gray-500">
-                          {event.location || "Location not provided"}
-                        </p>
-                      </div>
-                      <div className="rounded-full bg-primary-50 px-2.5 py-1 text-xs font-medium text-primary-900">
-                        {formatDate(
-                          event.eventDate || event.date,
-                          t("dashboard.noDate"),
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          </Card>
-
-          <Card>
-            <div className="flex items-center gap-2 text-sm font-semibold text-primary-900">
-              <ShieldCheck className="h-4 w-4" />
-              {t("dashboard.quickActions")}
-            </div>
-            <div className="mt-4 space-y-3">
-              <Link to="/events" className="block">
-                <Button icon={PlusCircle} className="w-full justify-start">
-                  {t("dashboard.addNewEvent")}
-                </Button>
-              </Link>
-              <Link to="/students" className="block">
-                <Button
-                  icon={UserPlus}
-                  className="w-full justify-start"
-                  variant="outline"
-                >
-                  {t("dashboard.registerStudent")}
-                </Button>
-              </Link>
-              <Link to="/foundation-projects" className="block">
-                <Button
-                  icon={PlusCircle}
-                  className="w-full justify-start"
-                  variant="outline"
-                >
-                  Create foundation project
-                </Button>
-              </Link>
-            </div>
-          </Card>
-        </div>
+        <Card>
+          <div className="flex items-center gap-2 text-sm font-semibold text-primary-900">
+            <ShieldCheck className="h-4 w-4" />
+            {t("dashboard.quickActions")}
+          </div>
+          <div className="mt-4 space-y-3">
+            <Link to="/events" className="block">
+              <Button icon={PlusCircle} className="w-full justify-start">
+                {t("dashboard.addNewEvent")}
+              </Button>
+            </Link>
+            <Link to="/students" className="block">
+              <Button
+                icon={UserPlus}
+                className="w-full justify-start"
+                variant="outline"
+              >
+                {t("dashboard.registerStudent")}
+              </Button>
+            </Link>
+            <Link to="/foundation-projects" className="block">
+              <Button
+                icon={PlusCircle}
+                className="w-full justify-start"
+                variant="outline"
+              >
+                Create foundation project
+              </Button>
+            </Link>
+          </div>
+        </Card>
       </div>
     </div>
   );

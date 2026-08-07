@@ -57,12 +57,9 @@ const navigation = [
 const isChildActive = (item, pathname) =>
   item.children?.some((child) => pathname.startsWith(child.href));
 
-// Role -> avatar letter, used whenever we don't have a real first name yet
-const roleInitial = (role) => (role ? role.charAt(0).toUpperCase() : "A");
-
 export default function Sidebar({ open, setOpen }) {
   const { t } = useTranslation();
-  const { logout, user } = useAuth();
+  const { logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -89,23 +86,19 @@ export default function Sidebar({ open, setOpen }) {
   };
 
   const handleLogout = () => {
+    const confirmLogout = window.confirm("Are you sure you want to log out?");
+
+    if (!confirmLogout) {
+      return;
+    }
+
     logout();
     navigate("/login", { replace: true });
+
     if (setOpen) {
       setOpen(false);
     }
   };
-
-  // "User" is just AuthContext's placeholder until we fetch the real profile,
-  // so fall back to the role (ADMIN -> "A") instead of showing "U".
-  const hasRealName = user?.firstName && user.firstName !== "User";
-  const initial = hasRealName
-    ? user.firstName.charAt(0).toUpperCase()
-    : roleInitial(user?.role) || (user?.email || "A").charAt(0).toUpperCase();
-
-  const displayName = hasRealName
-    ? `${user.firstName} ${user.lastName || ""}`.trim()
-    : user?.email || "Admin";
 
   // Standard standalone link styling
   const linkClasses = ({ isActive }) =>
@@ -236,29 +229,16 @@ export default function Sidebar({ open, setOpen }) {
           })}
         </nav>
 
-        {/* User footer */}
+        {/* Logout */}
         <div className="shrink-0 border-t border-gray-100 p-3.5">
-          <div className="flex items-center gap-3 rounded-xl bg-gray-50/80 px-3 py-2.5 border border-gray-100/80">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-900 text-sm font-semibold text-white">
-              {initial}
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium text-gray-800">
-                {displayName}
-              </p>
-              <p className="truncate text-xs font-medium uppercase tracking-wider text-gray-400">
-                {user?.role || "viewer"}
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={handleLogout}
-              title={t("common.logout")}
-              className="rounded-lg p-2 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600 focus:outline-none"
-            >
-              <LogOut className="h-4 w-4" />
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="flex w-full items-center justify-center gap-2 rounded-xl px-3.5 py-2.5 text-sm font-medium text-gray-500 transition-colors hover:bg-red-50 hover:text-red-600 focus:outline-none"
+          >
+            <LogOut className="h-4 w-4" />
+            {t("common.logout")}
+          </button>
         </div>
       </aside>
     </>
