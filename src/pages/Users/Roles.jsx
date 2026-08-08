@@ -1,11 +1,37 @@
 import { useState, useEffect } from "react";
-import { Search } from "lucide-react";
+import {
+  Search,
+  ShieldCheck,
+  ShieldAlert,
+  UserCog,
+  TabletSmartphone,
+  Lock,
+} from "lucide-react";
 import Card from "../../components/common/Card";
 import Table from "../../components/common/Table";
 import Input from "../../components/common/Input";
 import Button from "../../components/common/Button";
 import toast from "react-hot-toast";
 import { getUsers } from "../../api/users";
+
+const roleMeta = {
+  ADMIN: {
+    icon: ShieldCheck,
+    color:
+      "bg-primary-100 text-primary-900 dark:bg-primary-500/20 dark:text-primary-300",
+    iconColor: "bg-gradient-primary text-white shadow-lg shadow-primary-900/25",
+  },
+  EDITOR: {
+    icon: UserCog,
+    color: "bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-300",
+    iconColor: "bg-gradient-accent text-white shadow-lg shadow-accent-500/30",
+  },
+  VIEWER: {
+    icon: TabletSmartphone,
+    color: "bg-gray-100 text-gray-700 dark:bg-dark-700 dark:text-gray-300",
+    iconColor: "bg-gray-800 text-white shadow-lg shadow-gray-900/20",
+  },
+};
 
 export default function Roles() {
   const [users, setUsers] = useState([]);
@@ -18,18 +44,14 @@ export default function Roles() {
       name: "ADMIN",
       description:
         "Full system access – can create, update, delete all resources.",
-      color:
-        "bg-primary-100 text-primary-900 dark:bg-primary-500/20 dark:text-primary-300",
     },
     {
       name: "EDITOR",
       description: "Can create and update content, but cannot delete.",
-      color: "bg-blue-100 text-blue-700 dark:bg-blue-500/20 dark:text-blue-300",
     },
     {
       name: "VIEWER",
       description: "Read-only access to all public data.",
-      color: "bg-gray-100 text-gray-700 dark:bg-dark-700 dark:text-gray-300",
     },
   ];
 
@@ -61,7 +83,9 @@ export default function Roles() {
       header: "Users",
       accessor: "name",
       cell: (name) => (
-        <span className="font-medium">{roleCounts[name] || 0}</span>
+        <span className="font-medium text-gray-800 dark:text-gray-100">
+          {roleCounts[name] || 0}
+        </span>
       ),
     },
     {
@@ -69,8 +93,9 @@ export default function Roles() {
       accessor: "name",
       cell: (name) => (
         <span
-          className={`px-2 py-1 rounded-full text-xs font-medium ${roleDefinitions.find((r) => r.name === name)?.color || "bg-gray-100 dark:bg-dark-700 dark:text-gray-300"}`}
+          className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ${roleMeta[name]?.color || "bg-gray-100 dark:bg-dark-700 dark:text-gray-300"}`}
         >
+          <Lock className="h-3 w-3" />
           {name}
         </span>
       ),
@@ -85,19 +110,64 @@ export default function Roles() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
-          Roles & Permissions
-        </h1>
-        <div className="text-sm text-gray-500 dark:text-gray-400">
+      {/* Page header */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="font-display text-2xl font-semibold text-gray-800 dark:text-gray-100">
+            Roles & Permissions
+          </h1>
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+            Control access levels across the admin portal.
+          </p>
+        </div>
+        <div className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm text-gray-600 shadow-card dark:border-white/5 dark:bg-dark-850 dark:text-gray-300">
+          <ShieldAlert className="h-4 w-4 text-accent-500" />
           Total users: {users.length}
         </div>
       </div>
 
-      <Card>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-          <div className="relative w-full sm:w-64">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+      {/* Role definition cards */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        {roleDefinitions.map((role) => {
+          const meta = roleMeta[role.name] || roleMeta.VIEWER;
+          const Icon = meta.icon;
+          return (
+            <div
+              key={role.name}
+              className="group relative overflow-hidden rounded-2xl border border-gray-100/80 bg-white p-6 shadow-card ring-1 ring-black/[0.02] transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover dark:border-white/5 dark:bg-dark-850 dark:ring-white/[0.02]"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div
+                  className={`flex h-12 w-12 items-center justify-center rounded-2xl ${meta.iconColor}`}
+                >
+                  <Icon className="h-5 w-5" />
+                </div>
+                <span
+                  className={`rounded-full px-2.5 py-1 text-xs font-medium ${meta.color}`}
+                >
+                  {role.name}
+                </span>
+              </div>
+              <p className="mt-4 text-sm leading-relaxed text-gray-500 dark:text-gray-400">
+                {role.description}
+              </p>
+              <div className="mt-5 flex items-center gap-2 border-t border-gray-100 pt-4 dark:border-gray-800">
+                <span className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+                  {roleCounts[role.name] || 0}
+                </span>
+                <span className="text-sm text-gray-500 dark:text-gray-400">
+                  Assigned user{roleCounts[role.name] === 1 ? "" : "s"}
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <Card className="!p-0 overflow-hidden">
+        <div className="flex flex-col gap-4 border-b border-gray-100 p-5 dark:border-gray-800 sm:flex-row sm:items-center sm:justify-between">
+          <div className="relative w-full sm:max-w-xs">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
             <Input
               placeholder="Search roles..."
               value={searchTerm}
@@ -105,41 +175,23 @@ export default function Roles() {
               className="pl-9"
             />
           </div>
-          <Button variant="outline" size="sm">
+          {/* <Button variant="outline" size="sm">
             Export
-          </Button>
+          </Button> */}
         </div>
         {loading ? (
-          <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-            Loading...
+          <div className="space-y-3 p-5">
+            {[1, 2, 3].map((item) => (
+              <div
+                key={item}
+                className="h-12 animate-pulse rounded-xl bg-gray-100 dark:bg-dark-800"
+              />
+            ))}
           </div>
         ) : (
           <Table columns={columns} data={filtered} />
         )}
       </Card>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {roleDefinitions.map((role) => (
-          <div
-            key={role.name}
-            className="bg-white p-6 rounded-xl shadow-card border border-gray-100 dark:border-white/5 dark:bg-dark-850"
-          >
-            <div className="flex items-center justify-between">
-              <span
-                className={`px-2 py-1 rounded-full text-xs font-medium ${role.color}`}
-              >
-                {role.name}
-              </span>
-              <span className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
-                {roleCounts[role.name] || 0}
-              </span>
-            </div>
-            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-              {role.description}
-            </p>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }

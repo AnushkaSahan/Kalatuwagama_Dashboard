@@ -1,23 +1,15 @@
-# Professional UI Upgrade — Inspired by NeuroBank Design
+# UI Upgrade for Foundation, Administration, Profile & Settings
 
 ## Goal
 
-Make the Kalatuwagama admin portal more attractive and professional (glassmorphism, gradients, refined shadows/animations) while keeping the temple's red/gold identity and existing dark/light mode.
+Upgrade the UI of the Foundation Projects, Users, Roles, My Profile, and Settings pages to match the premium style already applied to other pages (Events, Dashboard) — using gradient primaries, accent gold, glassmorphism, refined shadows, and hover animations.
 
 ## Steps
 
-- [ ] Step 1: `tailwind.config.js` — add refined shadows, transition timing, gradient utilities
-- [ ] Step 2: `src/index.css` — add glass utility, refined scrollbar (light+dark), micro-animations, smooth theme transition
-- [ ] Step 3: Upgrade common components
-  - [ ] Card — premium shadow, subtle hover lift, refined border
-  - [ ] Button — gradient primary, glow hover, refined variants
-  - [ ] StatCard — gradient tone treatment, ring, hover animation
-  - [ ] Input — refined border/focus
-  - [ ] Modal — glass overlay, refined panel
-  - [ ] Table — cleaner header/rows with hover
-- [ ] Step 4: Upgrade Layout
-  - [ ] TopNav — polished glass header, refined theme toggle & user menu
-  - [ ] Sidebar — sleek dark glass sidebar, better active indicators
-- [ ] Step 5: Upgrade Dashboard — premium hero banner with glass & glow, refined cards
-- [ ] Step 6: Upgrade Login/auth pages with premium panels
-- [ ] Step 7: Verify `npm run build`
+- [x] Step 1: Analyze upgraded pages (Events, Dashboard) and shared components for style reference
+- [x] Step 2: Upgrade `src/pages/Foundation/FoundationProjects.jsx` — card grid layout, premium header, empty state, skeleton
+- [x] Step 3: Upgrade `src/pages/Users/Users.jsx` — premium header, stat cards, restyled table, empty state, skeleton
+- [x] Step 4: Upgrade `src/pages/Users/Roles.jsx` — premium header, premium role cards, restyled table
+- [x] Step 5: Upgrade `src/pages/Settings/Profile.jsx` — premium header, user summary card, refined cards
+- [x] Step 6: Upgrade `src/pages/Settings/Settings.jsx` — hero banner, icon circles, refined cards
+- [x] Step 7: Verify `npm run build` passes and pages render correctly

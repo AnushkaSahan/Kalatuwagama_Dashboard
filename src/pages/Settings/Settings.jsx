@@ -8,10 +8,13 @@ import {
   ExternalLink,
   Languages,
   Check,
+  Settings as SettingsIcon,
+  Wrench,
 } from "lucide-react";
 import Card from "../../components/common/Card";
 import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
+import TempleMark from "../../components/common/TempleMark";
 import { changeLanguage } from "../../i18n";
 import toast from "react-hot-toast";
 
@@ -60,24 +63,46 @@ export default function Settings() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-display text-2xl font-semibold text-gray-800 dark:text-gray-100">
-          {t("settings.title")}
-        </h1>
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-          {t("settings.subtitle")}
-        </p>
-      </div>
+      {/* Hero banner */}
+      {/* <div className="relative overflow-hidden rounded-[28px] border border-primary-100/50 bg-gradient-hero p-6 text-white shadow-soft ring-1 ring-white/5 sm:p-8">
+        <div className="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-accent-500/25 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 left-10 h-56 w-56 rounded-full bg-primary-500/15 blur-3xl" />
+        <div className="pointer-events-none absolute inset-0 opacity-[0.04] [background-image:radial-gradient(circle_at_1px_1px,#fff_1px,transparent_0)] [background-size:24px_24px]" />
+
+        <div className="relative flex items-center gap-4">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15 text-accent-400 ring-1 ring-white/20 backdrop-blur">
+            <SettingsIcon className="h-6 w-6" />
+          </div>
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-sm text-primary-50">
+              <TempleMark className="h-4 w-4 text-accent-400" />
+              {t("settings.title")}
+            </div>
+            <h1 className="mt-2 font-display text-2xl font-semibold sm:text-3xl">
+              {t("settings.subtitle")}
+            </h1>
+          </div>
+        </div>
+      </div> */}
 
       <form onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <div className="space-y-6 lg:col-span-2">
             {/* General Settings */}
             <Card>
-              <h3 className="mb-4 flex items-center gap-2 text-lg font-medium text-gray-800 dark:text-gray-100">
-                <Globe className="h-5 w-5 text-primary-900 dark:text-primary-400" />
-                {t("settings.generalSettings")}
-              </h3>
+              <div className="mb-5 flex items-center gap-3 border-b border-gray-100 pb-4 dark:border-gray-800">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-50 text-primary-900 dark:bg-primary-500/15 dark:text-primary-300">
+                  <Globe className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="font-medium text-gray-800 dark:text-gray-100">
+                    {t("settings.generalSettings")}
+                  </h3>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    {t("settings.subtitle")}
+                  </p>
+                </div>
+              </div>
               <div className="space-y-4">
                 <div>
                   <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -205,13 +230,19 @@ export default function Settings() {
           <div className="space-y-6">
             {/* Language */}
             <Card>
-              <h3 className="mb-1 flex items-center gap-2 text-lg font-medium text-gray-800 dark:text-gray-100">
-                <Languages className="h-5 w-5 text-primary-900 dark:text-primary-400" />
-                {t("settings.language")}
-              </h3>
-              <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
-                {t("settings.languageDesc")}
-              </p>
+              <div className="mb-4 flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-50 text-accent-700 dark:bg-accent-500/15 dark:text-accent-300">
+                  <Languages className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="font-medium text-gray-800 dark:text-gray-100">
+                    {t("settings.language")}
+                  </h3>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    {t("settings.languageDesc")}
+                  </p>
+                </div>
+              </div>
               <div className="space-y-2">
                 {LANGUAGES.map((lang) => {
                   const active = i18n.language === lang.code;
@@ -246,10 +277,14 @@ export default function Settings() {
             </Card>
 
             <Card>
-              <h3 className="mb-4 flex items-center gap-2 text-lg font-medium text-gray-800 dark:text-gray-100">
-                <Bell className="h-5 w-5 text-primary-900 dark:text-primary-400" />
-                {t("settings.notifications")}
-              </h3>
+              <div className="mb-4 flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-50 text-primary-900 dark:bg-primary-500/15 dark:text-primary-300">
+                  <Bell className="h-5 w-5" />
+                </div>
+                <h3 className="font-medium text-gray-800 dark:text-gray-100">
+                  {t("settings.notifications")}
+                </h3>
+              </div>
               <div className="space-y-3">
                 <label className="flex cursor-pointer items-center justify-between">
                   <span className="text-sm text-gray-700 dark:text-gray-300">
@@ -271,9 +306,14 @@ export default function Settings() {
             </Card>
 
             <Card>
-              <h3 className="mb-4 text-lg font-medium text-gray-800 dark:text-gray-100">
-                {t("settings.maintenance")}
-              </h3>
+              <div className="mb-4 flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-red-50 text-danger dark:bg-red-500/15 dark:text-red-400">
+                  <Wrench className="h-5 w-5" />
+                </div>
+                <h3 className="font-medium text-gray-800 dark:text-gray-100">
+                  {t("settings.maintenance")}
+                </h3>
+              </div>
               <div className="space-y-3">
                 <label className="flex cursor-pointer items-center justify-between">
                   <span className="text-sm text-gray-700 dark:text-gray-300">
