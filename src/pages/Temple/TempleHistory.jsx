@@ -22,7 +22,12 @@ import ImageUploadField from "../../components/common/ImageUploadField";
 import TempleMark from "../../components/common/TempleMark";
 import toast from "react-hot-toast";
 
-const emptyForm = { title: "", description: "", imageUrl: "" };
+const emptyForm = {
+  title: "",
+  description: "",
+  imageUrl: "",
+  imageFit: "cover",
+};
 
 const timeAgo = (value) => {
   if (!value) return null;
@@ -85,6 +90,7 @@ export default function TempleHistory() {
       title: record.title || "",
       description: record.description || "",
       imageUrl: record.imageUrl || "",
+      imageFit: record.imageFit || "cover",
     });
     setModalOpen(true);
   };
@@ -211,7 +217,11 @@ export default function TempleHistory() {
                     <img
                       src={item.imageUrl}
                       alt={item.title}
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      className={`h-full w-full ${
+                        item.imageFit === "contain"
+                          ? "object-contain"
+                          : "object-cover"
+                      } transition-transform duration-300 group-hover:scale-105`}
                       onError={(e) => {
                         e.currentTarget.style.display = "none";
                       }}
@@ -330,6 +340,8 @@ export default function TempleHistory() {
             label="Record Image"
             value={formData.imageUrl}
             onChange={(url) => setFormData({ ...formData, imageUrl: url })}
+            fit={formData.imageFit}
+            onFitChange={(fit) => setFormData({ ...formData, imageFit: fit })}
             aspect="video"
           />
         </form>

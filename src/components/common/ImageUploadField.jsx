@@ -1,5 +1,13 @@
 import { useRef, useState } from "react";
-import { Upload, Link as LinkIcon, X, Loader2, ImageIcon } from "lucide-react";
+import {
+  Upload,
+  Link as LinkIcon,
+  X,
+  Loader2,
+  ImageIcon,
+  Shrink,
+  Expand,
+} from "lucide-react";
 import { uploadImage } from "../../api/uploads";
 import toast from "react-hot-toast";
 
@@ -9,10 +17,18 @@ const boxSize = {
   video: "aspect-video w-full rounded-xl",
 };
 
+// imageFit prop controls how the image is displayed:
+//  - "cover": fills the frame (may crop edges) — default to preserve current UI
+//  - "contain": shows the whole image without cropping
+export const imageFitClass = (fit) =>
+  fit === "contain" ? "object-contain" : "object-cover";
+
 export default function ImageUploadField({
   label = "Image",
   value,
   onChange,
+  onFitChange,
+  fit = "cover",
   aspect = "video",
   required = false,
 }) {
@@ -22,6 +38,7 @@ export default function ImageUploadField({
 
   const size = boxSize[aspect] || boxSize.video;
   const rounded = aspect === "circle" ? "rounded-full" : "rounded-xl";
+  const previewFit = imageFitClass(fit);
 
   const handleFileChange = async (e) => {
     const file = e.target.files?.[0];
@@ -51,6 +68,38 @@ export default function ImageUploadField({
     }
   };
 
+  const FitToggle = ({ show }) =>
+    show ? (
+      <div className="mt-2 inline-flex items-center overflow-hidden rounded-lg border border-gray-200 text-xs font-medium dark:border-gray-700">
+        <button
+          type="button"
+          onClick={() => onFitChange?.("cover")}
+          className={`inline-flex items-center gap-1 px-2.5 py-1.5 transition-colors ${
+            fit === "cover"
+              ? "bg-primary-900 text-white"
+              : "bg-white text-gray-500 hover:text-gray-700 dark:bg-dark-850 dark:text-gray-400 dark:hover:text-gray-200"
+          }`}
+          title="Fill the frame (crop edges)"
+        >
+          <Expand className="h-3.5 w-3.5" />
+          Cover
+        </button>
+        <button
+          type="button"
+          onClick={() => onFitChange?.("contain")}
+          className={`inline-flex items-center gap-1 px-2.5 py-1.5 transition-colors ${
+            fit === "contain"
+              ? "bg-primary-900 text-white"
+              : "bg-white text-gray-500 hover:text-gray-700 dark:bg-dark-850 dark:text-gray-400 dark:hover:text-gray-200"
+          }`}
+          title="Show the whole image"
+        >
+          <Shrink className="h-3.5 w-3.5" />
+          Contain
+        </button>
+      </div>
+    ) : null;
+
   return (
     <div>
       <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -64,7 +113,7 @@ export default function ImageUploadField({
           <img
             src={value}
             alt="Preview"
-            className={`h-full w-full object-cover ${rounded}`}
+            className={`h-full w-full ${previewFit} ${rounded}`}
             onError={(e) => {
               e.currentTarget.style.display = "none";
             }}
@@ -124,6 +173,13 @@ export default function ImageUploadField({
           Use image URL
         </button>
       </div>
+
+      {value && onFitChange && <FitToggle show />}
+      {value && !onFitChange && (
+        <p className="mt-2 text-[11px] text-gray-400 dark:text-gray-500">
+          Displaying as {fit === "contain" ? "Contain" : "Cover"}
+        </p>
+      )}
 
       {showUrlInput && (
         <input

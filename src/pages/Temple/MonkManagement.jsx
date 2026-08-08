@@ -8,7 +8,13 @@ import Modal from "../../components/common/Modal";
 import ImageUploadField from "../../components/common/ImageUploadField";
 import toast from "react-hot-toast";
 
-const emptyForm = { name: "", position: "", biography: "", imageUrl: "" };
+const emptyForm = {
+  name: "",
+  position: "",
+  biography: "",
+  imageUrl: "",
+  imageFit: "cover",
+};
 
 const timeAgo = (value) => {
   if (!value) return null;
@@ -80,6 +86,7 @@ export default function MonkManagement() {
       position: record.position || "",
       biography: record.biography || "",
       imageUrl: record.imageUrl || "",
+      imageFit: record.imageFit || "cover",
     });
     setModalOpen(true);
   };
@@ -203,7 +210,11 @@ export default function MonkManagement() {
                     <img
                       src={item.imageUrl}
                       alt={item.name}
-                      className="h-16 w-16 shrink-0 rounded-full object-cover ring-2 ring-primary-50"
+                      className={`h-16 w-16 shrink-0 rounded-full ${
+                        item.imageFit === "contain"
+                          ? "object-contain"
+                          : "object-cover"
+                      } ring-2 ring-primary-50`}
                       onError={(e) => {
                         e.currentTarget.style.display = "none";
                       }}
@@ -336,6 +347,8 @@ export default function MonkManagement() {
             label="Monk Image"
             value={formData.imageUrl}
             onChange={(url) => setFormData({ ...formData, imageUrl: url })}
+            fit={formData.imageFit}
+            onFitChange={(fit) => setFormData({ ...formData, imageFit: fit })}
             aspect="circle"
           />
         </form>

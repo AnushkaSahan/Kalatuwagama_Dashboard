@@ -28,6 +28,7 @@ const emptyForm = {
   startDate: "",
   endDate: "",
   imageUrl: "",
+  imageFit: "cover",
 };
 
 const formatDateInput = (value) => {
@@ -88,6 +89,7 @@ export default function FoundationProjects() {
       startDate: formatDateInput(record.startDate),
       endDate: formatDateInput(record.endDate),
       imageUrl: record.imageUrl || "",
+      imageFit: record.imageFit || "cover",
     });
     setModalOpen(true);
   };
@@ -222,7 +224,11 @@ export default function FoundationProjects() {
                   <img
                     src={item.imageUrl}
                     alt={item.title}
-                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    className={`h-full w-full ${
+                      item.imageFit === "contain"
+                        ? "object-contain"
+                        : "object-cover"
+                    } transition-transform duration-300 group-hover:scale-105`}
                     onError={(e) => {
                       e.currentTarget.parentElement.style.display = "none";
                     }}
@@ -371,6 +377,8 @@ export default function FoundationProjects() {
             label="Project Image"
             value={formData.imageUrl}
             onChange={(url) => setFormData({ ...formData, imageUrl: url })}
+            fit={formData.imageFit}
+            onFitChange={(fit) => setFormData({ ...formData, imageFit: fit })}
             aspect="video"
           />
         </form>

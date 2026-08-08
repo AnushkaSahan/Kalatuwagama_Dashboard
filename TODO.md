@@ -1,15 +1,31 @@
-# UI Upgrade for Foundation, Administration, Profile & Settings
+# TODO: Per-image Cover/Contain Fit (imageFit) feature
 
-## Goal
+Status: Completed
 
-Upgrade the UI of the Foundation Projects, Users, Roles, My Profile, and Settings pages to match the premium style already applied to other pages (Events, Dashboard) — using gradient primaries, accent gold, glassmorphism, refined shadows, and hover animations.
+## Backend
 
-## Steps
+- [x] Add `imageFit` field (default "cover") to entities: Event, Monk, Teacher, TempleHistory, FoundationProject, DonationInfo, Gallery
+- [x] Add `imageFit` to corresponding DTOs
+- [x] Update service impls to default imageFit = "cover" when null (create + update)
+- [x] Rebuild backend (`mvn clean package`) to verify compilation
 
-- [x] Step 1: Analyze upgraded pages (Events, Dashboard) and shared components for style reference
-- [x] Step 2: Upgrade `src/pages/Foundation/FoundationProjects.jsx` — card grid layout, premium header, empty state, skeleton
-- [x] Step 3: Upgrade `src/pages/Users/Users.jsx` — premium header, stat cards, restyled table, empty state, skeleton
-- [x] Step 4: Upgrade `src/pages/Users/Roles.jsx` — premium header, premium role cards, restyled table
-- [x] Step 5: Upgrade `src/pages/Settings/Profile.jsx` — premium header, user summary card, refined cards
-- [x] Step 6: Upgrade `src/pages/Settings/Settings.jsx` — hero banner, icon circles, refined cards
-- [x] Step 7: Verify `npm run build` passes and pages render correctly
+## Frontend — upload components
+
+- [x] Add Cover/Contain toggle to `ImageUploadField` (persist via onChange)
+- [x] Add per-image Cover/Contain toggle to `MultiImageUploadField`
+- [x] Ensure preview uses the selected fit live
+
+## Frontend — pages wiring
+
+- [x] Pass `imageFit` through form state in each edit/create page (Events, Gallery, MonkManagement, Teachers, TempleHistory, FoundationProjects, DonationDetails)
+- [x] Submit `imageFit` in create/update payloads
+- [x] Render cards using saved `imageFit` (object-cover / object-contain) across display grids
+
+## Verification
+
+- [x] `npm run build` passes
+- [x] Backend compiles and endpoints return imageFit
+
+## Bug fix
+
+- [x] Remove conflicting `@Lob` annotation on `ContactMessage.message` (caused 500 on `GET /api/contact-messages`)

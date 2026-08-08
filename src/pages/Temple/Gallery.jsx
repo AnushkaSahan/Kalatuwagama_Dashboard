@@ -49,6 +49,7 @@ export default function Gallery() {
   const [lockEventPicker, setLockEventPicker] = useState(false);
   const [uploadCategory, setUploadCategory] = useState("");
   const [uploadUrls, setUploadUrls] = useState([]);
+  const [uploadFits, setUploadFits] = useState([]);
   const [uploadSubmitting, setUploadSubmitting] = useState(false);
 
   // Album detail view
@@ -60,6 +61,7 @@ export default function Gallery() {
     title: "",
     category: "",
     imageUrl: "",
+    imageFit: "cover",
   });
   const [editSubmitting, setEditSubmitting] = useState(false);
 
@@ -111,6 +113,7 @@ export default function Gallery() {
     setLockEventPicker(Boolean(eventId));
     setUploadCategory("");
     setUploadUrls([]);
+    setUploadFits([]);
     setUploadOpen(true);
   };
 
@@ -132,12 +135,13 @@ export default function Gallery() {
     setUploadSubmitting(true);
     try {
       await Promise.all(
-        uploadUrls.map((imageUrl) =>
+        uploadUrls.map((imageUrl, index) =>
           createGalleryItem({
             eventId: uploadEventId,
             imageUrl,
             title: "",
             category: uploadCategory,
+            imageFit: (uploadFits && uploadFits[index]) || "cover",
           }),
         ),
       );
@@ -162,6 +166,7 @@ export default function Gallery() {
       title: photo.title || "",
       category: photo.category || "",
       imageUrl: photo.imageUrl || "",
+      imageFit: photo.imageFit || "cover",
     });
   };
 
@@ -359,7 +364,11 @@ export default function Gallery() {
                 <img
                   src={photo.imageUrl}
                   alt={photo.title || activeAlbum.event.title}
-                  className="h-full w-full object-cover"
+                  className={`h-full w-full ${
+                    photo.imageFit === "contain"
+                      ? "object-contain"
+                      : "object-cover"
+                  }`}
                   onError={(e) => {
                     e.currentTarget.style.display = "none";
                   }}
@@ -450,6 +459,8 @@ export default function Gallery() {
             label="Photos *"
             value={uploadUrls}
             onChange={setUploadUrls}
+            fits={uploadFits}
+            onFitChange={setUploadFits}
           />
 
           <div>
@@ -495,6 +506,8 @@ export default function Gallery() {
             label="Image"
             value={editForm.imageUrl}
             onChange={(url) => setEditForm({ ...editForm, imageUrl: url })}
+            fit={editForm.imageFit}
+            onFitChange={(fit) => setEditForm({ ...editForm, imageFit: fit })}
             aspect="video"
           />
           <div>

@@ -27,6 +27,7 @@ const emptyForm = {
   location: "",
   eventDate: "",
   imageUrl: "",
+  imageFit: "cover",
 };
 
 const toLocalInput = (value) => {
@@ -93,6 +94,7 @@ export default function Events() {
       location: record.location || "",
       eventDate: toLocalInput(record.eventDate),
       imageUrl: record.imageUrl || "",
+      imageFit: record.imageFit || "cover",
     });
     setModalOpen(true);
   };
@@ -226,7 +228,11 @@ export default function Events() {
                     <img
                       src={item.imageUrl}
                       alt={item.title}
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      className={`h-full w-full ${
+                        item.imageFit === "contain"
+                          ? "object-contain"
+                          : "object-cover"
+                      } transition-transform duration-300 group-hover:scale-105`}
                       onError={(e) => {
                         e.currentTarget.parentElement.style.display = "none";
                       }}
@@ -398,6 +404,8 @@ export default function Events() {
             label="Event Image"
             value={formData.imageUrl}
             onChange={(url) => setFormData({ ...formData, imageUrl: url })}
+            fit={formData.imageFit}
+            onFitChange={(fit) => setFormData({ ...formData, imageFit: fit })}
             aspect="video"
           />
         </form>

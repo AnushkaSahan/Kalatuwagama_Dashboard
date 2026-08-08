@@ -26,6 +26,7 @@ const emptyForm = {
   position: "",
   phone: "",
   imageUrl: "",
+  imageFit: "cover",
 };
 
 const timeAgo = (value) => {
@@ -97,6 +98,7 @@ export default function Teachers() {
       position: record.position || "",
       phone: record.phone || "",
       imageUrl: record.imageUrl || "",
+      imageFit: record.imageFit || "cover",
     });
     setModalOpen(true);
   };
@@ -222,7 +224,11 @@ export default function Teachers() {
                     <img
                       src={item.imageUrl}
                       alt={item.name}
-                      className="h-16 w-16 shrink-0 rounded-full object-cover ring-2 ring-primary-50"
+                      className={`h-16 w-16 shrink-0 rounded-full ${
+                        item.imageFit === "contain"
+                          ? "object-contain"
+                          : "object-cover"
+                      } ring-2 ring-primary-50`}
                       onError={(e) => {
                         e.currentTarget.style.display = "none";
                       }}
@@ -351,6 +357,8 @@ export default function Teachers() {
             label="Teacher Image"
             value={formData.imageUrl}
             onChange={(url) => setFormData({ ...formData, imageUrl: url })}
+            fit={formData.imageFit}
+            onFitChange={(fit) => setFormData({ ...formData, imageFit: fit })}
             aspect="circle"
           />
         </form>

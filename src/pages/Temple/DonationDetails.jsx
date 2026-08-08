@@ -29,6 +29,7 @@ const emptyForm = {
   accountNumber: "",
   branch: "",
   qrImage: "",
+  imageFit: "cover",
 };
 
 export default function DonationDetails() {
@@ -72,6 +73,7 @@ export default function DonationDetails() {
       accountNumber: record.accountNumber || "",
       branch: record.branch || "",
       qrImage: record.qrImage || "",
+      imageFit: record.imageFit || "cover",
     });
     setModalOpen(true);
   };
@@ -228,7 +230,11 @@ export default function DonationDetails() {
                     <img
                       src={item.qrImage}
                       alt="QR code"
-                      className="h-14 w-14 object-cover"
+                      className={`h-14 w-14 ${
+                        item.imageFit === "contain"
+                          ? "object-contain"
+                          : "object-cover"
+                      }`}
                       onError={(e) => {
                         e.currentTarget.parentElement.style.display = "none";
                       }}
@@ -292,7 +298,11 @@ export default function DonationDetails() {
             <img
               src={qrPreview.qrImage}
               alt="QR code"
-              className="h-56 w-56 rounded-xl object-cover"
+              className={`h-56 w-56 rounded-xl ${
+                qrPreview.imageFit === "contain"
+                  ? "object-contain"
+                  : "object-cover"
+              }`}
             />
             <p className="mt-4 font-display text-base font-semibold text-gray-800">
               {qrPreview.bankName}
@@ -394,6 +404,8 @@ export default function DonationDetails() {
             label="QR Code Image"
             value={formData.qrImage}
             onChange={(url) => setFormData({ ...formData, qrImage: url })}
+            fit={formData.imageFit}
+            onFitChange={(fit) => setFormData({ ...formData, imageFit: fit })}
             aspect="square"
           />
         </form>
