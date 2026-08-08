@@ -151,7 +151,7 @@ export default function Gallery() {
             Gallery
           </h1>
           <p className="mt-1 text-sm text-gray-500">
-            Curate photos of the temple, events, and community life.
+            Curate photos of the temple, events and community life.
           </p>
         </div>
         <Button icon={Plus} onClick={openCreate}>

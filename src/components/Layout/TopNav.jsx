@@ -1,7 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Menu, Moon, Sun, ChevronDown, User, LogOut } from "lucide-react";
+import {
+  Menu,
+  Moon,
+  Sun,
+  ChevronDown,
+  ChevronRight,
+  User,
+  LogOut,
+} from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeContext";
 
@@ -12,6 +20,27 @@ export default function TopNav({ setSidebarOpen }) {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
+  const location = useLocation();
+
+  const pageTitles = {
+    "/dashboard": "Dashboard",
+    "/temple-history": "Temple History",
+    "/monks": "Monks",
+    "/events": "Events",
+    "/announcements": "Announcements",
+    "/gallery": "Gallery",
+    "/donations": "Donations",
+    "/messages": "Messages",
+    "/teachers": "Teachers",
+    "/students": "Students",
+    "/foundation-projects": "Foundation Projects",
+    "/users": "Users",
+    "/roles": "Roles",
+    "/settings": "Settings",
+    "/profile": "Profile",
+  };
+
+  const currentPage = pageTitles[location.pathname] || "Admin Portal";
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -38,8 +67,10 @@ export default function TopNav({ setSidebarOpen }) {
   };
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-gray-100 bg-white/70 px-4 backdrop-blur-xl dark:border-white/5 dark:bg-dark-900/70 md:px-6">
+    <header className="flex h-16 shrink-0 items-center justify-between border-b border-gray-100 bg-white px-4 sm:px-6 dark:border-white/5 dark:bg-dark-900">
+      {/* Left Side */}
       <div className="flex items-center gap-3">
+        {/* Mobile Menu */}
         <button
           type="button"
           className="rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-800 dark:text-gray-400 dark:hover:bg-dark-800 dark:hover:text-gray-100 lg:hidden"
@@ -47,9 +78,24 @@ export default function TopNav({ setSidebarOpen }) {
         >
           <Menu className="h-5 w-5" />
         </button>
+
+        {/* Page Information */}
+        <div className="hidden sm:block">
+          <div className="flex items-center gap-2 text-xs text-gray-400">
+            <span>Admin Portal</span>
+
+            <ChevronRight className="h-3.5 w-3.5" />
+
+            <span className="text-gray-500 dark:text-gray-400">
+              {currentPage}
+            </span>
+          </div>
+        </div>
       </div>
 
+      {/* Right Side */}
       <div className="flex items-center gap-2">
+        {/* Theme Button */}
         <button
           type="button"
           onClick={toggleTheme}
@@ -58,43 +104,48 @@ export default function TopNav({ setSidebarOpen }) {
               ? t("topnav.switchToLight")
               : t("topnav.switchToDark")
           }
-          className="group relative flex h-9 w-9 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-500 shadow-sm transition-all duration-200 hover:border-accent-500/50 hover:text-accent-700 dark:border-white/10 dark:bg-dark-800 dark:text-gray-300 dark:hover:border-accent-500/40 dark:hover:text-accent-400"
+          className="group relative flex h-9 w-9 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-500 shadow-sm transition-all duration-200 hover:border-accent-500/50 hover:text-accent-700 dark:border-white/10 dark:bg-dark-800 dark:text-gray-300 dark:hover:border-accent-500/40"
         >
           {theme === "dark" ? (
-            <Sun className="h-[18px] w-[18px] transition-transform duration-300 group-hover:rotate-45" />
+            <Sun className="h-[18px] w-[18px]" />
           ) : (
-            <Moon className="h-[18px] w-[18px] transition-transform duration-300 group-hover:-rotate-12" />
+            <Moon className="h-[18px] w-[18px]" />
           )}
         </button>
 
         <div className="mx-1 hidden h-6 w-px bg-gray-200 dark:bg-white/10 sm:block" />
 
-        <div className="relative" ref={menuRef}>
+        {/* User */}
+        <div className="relative z-50" ref={menuRef}>
           <button
             type="button"
             onClick={() => setMenuOpen((v) => !v)}
             className="flex items-center gap-2 rounded-full py-1 pl-1 pr-2 transition-colors hover:bg-gray-100 dark:hover:bg-dark-800"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-primary text-sm font-semibold text-white shadow-md shadow-primary-900/30">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#6F1D1B] text-sm font-semibold text-white shadow-md">
               {initial}
             </div>
+
             <div className="hidden text-left leading-tight sm:block">
               <p className="max-w-[9rem] truncate text-sm font-medium text-gray-800 dark:text-gray-100">
                 {displayName}
               </p>
+
               <p className="text-[11px] capitalize leading-tight text-gray-400 dark:text-gray-500">
                 {(user?.role || "viewer").toLowerCase()}
               </p>
             </div>
+
             <ChevronDown
-              className={`hidden h-4 w-4 text-gray-400 transition-transform duration-200 sm:block dark:text-gray-500 ${
+              className={`hidden h-4 w-4 text-gray-400 transition-transform duration-200 sm:block ${
                 menuOpen ? "rotate-180" : ""
               }`}
             />
           </button>
 
+          {/* Dropdown */}
           {menuOpen && (
-            <div className="absolute right-0 top-full mt-2 w-52 overflow-hidden rounded-xl border border-gray-100 bg-white/95 py-1.5 shadow-soft backdrop-blur-xl dark:border-white/10 dark:bg-dark-850/95 animate-fade-in">
+            <div className="absolute right-0 top-full z-[100] mt-2 w-52 overflow-hidden rounded-xl border border-gray-100 bg-white py-1.5 shadow-xl dark:border-white/10 dark:bg-dark-850">
               <Link
                 to="/profile"
                 onClick={() => setMenuOpen(false)}
@@ -103,7 +154,9 @@ export default function TopNav({ setSidebarOpen }) {
                 <User className="h-4 w-4" />
                 {t("common.profile")}
               </Link>
+
               <div className="my-1 h-px bg-gray-100 dark:bg-white/5" />
+
               <button
                 type="button"
                 onClick={handleLogout}

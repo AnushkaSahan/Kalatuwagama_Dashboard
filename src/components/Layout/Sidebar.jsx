@@ -127,25 +127,26 @@ export default function Sidebar({ open, setOpen }) {
         `}
       >
         {/* Brand header */}
-        <div className="relative flex h-20 shrink-0 items-center justify-between overflow-hidden border-b border-gray-100 bg-gradient-hero px-5 dark:border-white/5">
-          <div className="pointer-events-none absolute -right-8 -top-10 h-28 w-28 rounded-full bg-accent-500/20 blur-2xl" />
-          <div className="pointer-events-none absolute -bottom-16 -left-10 h-32 w-32 rounded-full bg-primary-500/20 blur-3xl" />
+        <div className="relative flex h-20 shrink-0 items-center justify-between overflow-hidden border-b border-white/10 bg-[#6F1D1B] px-5">
           <div className="relative z-10 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-accent-500/40 bg-white/5 text-accent-400 shadow-lg shadow-accent-500/10">
-              <TempleMark className="h-5 w-5" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-transparent text-[#D4AF37]">
+              <TempleMark className="h-6 w-6" />
             </div>
+
             <div className="leading-tight">
-              <p className="font-display text-base font-semibold tracking-wide text-primary-50">
+              <p className="font-display text-base font-semibold tracking-wide text-white">
                 {t("sidebar.brand")}
               </p>
-              <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-primary-200/70">
+
+              <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-white/70">
                 {t("sidebar.portal")}
               </p>
             </div>
           </div>
+
           <button
             type="button"
-            className="relative z-10 rounded-lg p-2 text-primary-100 hover:bg-white/10 lg:hidden"
+            className="relative z-10 rounded-lg p-2 text-white hover:bg-white/10 lg:hidden"
             onClick={() => setOpen(false)}
           >
             <X className="h-5 w-5" />

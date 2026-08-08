@@ -179,7 +179,7 @@ export default function Events() {
       </Card>
 
       {loading ? (
-        <div className="grid gap-4 lg:grid-cols-2">
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
           {[1, 2, 3, 4].map((item) => (
             <div
               key={item}
@@ -209,19 +209,20 @@ export default function Events() {
           )}
         </Card>
       ) : (
-        <div className="grid gap-4 lg:grid-cols-2">
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
           {filtered.map((item) => {
             const isPast = new Date(item.eventDate).getTime() < Date.now();
             const { month, day, time, weekday } = dateParts(item.eventDate);
+
             return (
               <div
                 key={item.id}
-                className={`group overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-soft ${
+                className={`group overflow-hidden rounded-xl border border-gray-100 bg-white shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-soft ${
                   isPast ? "opacity-70" : ""
                 }`}
               >
                 {item.imageUrl && (
-                  <div className="relative aspect-video overflow-hidden bg-gray-100">
+                  <div className="relative h-36 overflow-hidden bg-gray-100">
                     <img
                       src={item.imageUrl}
                       alt={item.title}
@@ -230,9 +231,11 @@ export default function Events() {
                         e.currentTarget.parentElement.style.display = "none";
                       }}
                     />
+
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+
                     <div
-                      className={`absolute left-4 top-4 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider ${
+                      className={`absolute left-3 top-3 rounded-full px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide ${
                         isPast
                           ? "bg-white/85 text-gray-700"
                           : "bg-primary-900/85 text-white"
@@ -243,50 +246,57 @@ export default function Events() {
                   </div>
                 )}
 
-                <div className="flex flex-col gap-3 p-4">
+                <div className="flex flex-col gap-2 p-3">
                   <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <h3 className="font-display text-base font-semibold text-gray-800">
+                    <div className="min-w-0">
+                      <h3 className="truncate font-display text-sm font-semibold text-gray-800">
                         {item.title}
                       </h3>
-                      <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500">
+
+                      <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-gray-500">
                         <span>{time}</span>
+
                         {item.location && (
-                          <span className="flex items-center gap-1">
-                            <MapPin className="h-3.5 w-3.5" />
+                          <span className="flex items-center gap-1 truncate">
+                            <MapPin className="h-3 w-3 shrink-0" />
                             {item.location}
                           </span>
                         )}
+
                         <span>{weekday}</span>
                       </div>
                     </div>
+
                     {isPast && (
-                      <span className="shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-gray-500">
+                      <span className="shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-[9px] font-medium uppercase tracking-wide text-gray-500">
                         Past
                       </span>
                     )}
                   </div>
+
                   {item.description && (
-                    <p className="text-sm text-gray-500 line-clamp-2">
+                    <p className="line-clamp-2 text-xs leading-relaxed text-gray-500">
                       {item.description}
                     </p>
                   )}
-                  <div className="flex items-center justify-end gap-1 pt-1">
+
+                  <div className="flex items-center justify-end gap-0.5 pt-0.5">
                     <button
                       type="button"
                       onClick={() => openEdit(item)}
-                      className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-primary-50 hover:text-primary-900"
+                      className="rounded-md p-1.5 text-gray-400 hover:bg-primary-50 hover:text-primary-900"
                       title="Edit"
                     >
-                      <Pencil className="h-4 w-4" />
+                      <Pencil className="h-3.5 w-3.5" />
                     </button>
+
                     <button
                       type="button"
                       onClick={() => handleDelete(item.id)}
-                      className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                      className="rounded-md p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-600"
                       title="Delete"
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <Trash2 className="h-3.5 w-3.5" />
                     </button>
                   </div>
                 </div>
