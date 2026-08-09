@@ -19,6 +19,7 @@ import {
 } from "../../api/gallery";
 import { getEvents } from "../../api/events";
 import Card from "../../components/common/Card";
+import FocalImage from "../../components/common/FocalImage";
 import Button from "../../components/common/Button";
 import Input from "../../components/common/Input";
 import Modal from "../../components/common/Modal";
@@ -49,7 +50,6 @@ export default function Gallery() {
   const [lockEventPicker, setLockEventPicker] = useState(false);
   const [uploadCategory, setUploadCategory] = useState("");
   const [uploadUrls, setUploadUrls] = useState([]);
-  const [uploadFits, setUploadFits] = useState([]);
   const [uploadSubmitting, setUploadSubmitting] = useState(false);
 
   // Album detail view
@@ -61,7 +61,6 @@ export default function Gallery() {
     title: "",
     category: "",
     imageUrl: "",
-    imageFit: "cover",
   });
   const [editSubmitting, setEditSubmitting] = useState(false);
 
@@ -113,7 +112,6 @@ export default function Gallery() {
     setLockEventPicker(Boolean(eventId));
     setUploadCategory("");
     setUploadUrls([]);
-    setUploadFits([]);
     setUploadOpen(true);
   };
 
@@ -135,13 +133,12 @@ export default function Gallery() {
     setUploadSubmitting(true);
     try {
       await Promise.all(
-        uploadUrls.map((imageUrl, index) =>
+        uploadUrls.map((imageUrl) =>
           createGalleryItem({
             eventId: uploadEventId,
             imageUrl,
             title: "",
             category: uploadCategory,
-            imageFit: (uploadFits && uploadFits[index]) || "cover",
           }),
         ),
       );
@@ -166,7 +163,6 @@ export default function Gallery() {
       title: photo.title || "",
       category: photo.category || "",
       imageUrl: photo.imageUrl || "",
-      imageFit: photo.imageFit || "cover",
     });
   };
 
@@ -288,7 +284,7 @@ export default function Gallery() {
               >
                 <div className="relative h-40 w-full overflow-hidden bg-gray-100">
                   {cover ? (
-                    <img
+                    <FocalImage
                       src={cover.imageUrl}
                       alt={album.event.title}
                       className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
@@ -361,14 +357,10 @@ export default function Gallery() {
                 key={photo.id}
                 className="group relative aspect-square overflow-hidden rounded-xl border border-gray-100 bg-gray-100"
               >
-                <img
+                <FocalImage
                   src={photo.imageUrl}
                   alt={photo.title || activeAlbum.event.title}
-                  className={`h-full w-full ${
-                    photo.imageFit === "contain"
-                      ? "object-contain"
-                      : "object-cover"
-                  }`}
+                  className="h-full w-full object-cover"
                   onError={(e) => {
                     e.currentTarget.style.display = "none";
                   }}
@@ -459,8 +451,6 @@ export default function Gallery() {
             label="Photos *"
             value={uploadUrls}
             onChange={setUploadUrls}
-            fits={uploadFits}
-            onFitChange={setUploadFits}
           />
 
           <div>
@@ -506,8 +496,6 @@ export default function Gallery() {
             label="Image"
             value={editForm.imageUrl}
             onChange={(url) => setEditForm({ ...editForm, imageUrl: url })}
-            fit={editForm.imageFit}
-            onFitChange={(fit) => setEditForm({ ...editForm, imageFit: fit })}
             aspect="video"
           />
           <div>
