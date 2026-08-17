@@ -14,17 +14,33 @@ import toast from "react-hot-toast";
 
 const emptyForm = { title: "", description: "", publishDate: "" };
 
+// The backend stores publishDate as a zone-naive LocalDateTime string
+// (e.g. "2026-08-20T10:00:00") — it's a plain wall-clock value with no
+// timezone attached. Never round-trip it through `new Date(...).toISOString()`
+// or `getTimezoneOffset()` math: that silently shifts the time (and
+// sometimes the date) by the browser's UTC offset. Just pass the digits
+// through as strings.
+
+// Backend "2026-08-20T10:00:00" -> datetime-local input "2026-08-20T10:00"
 const toLocalInput = (value) => {
   if (!value) return "";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "";
-  const offset = date.getTimezoneOffset();
-  return new Date(date.getTime() - offset * 60000).toISOString().slice(0, 16);
+  return String(value).slice(0, 16);
+};
+
+// Parse the zone-naive string manually into a local Date for display only
+// (never re-serialized), so no timezone conversion happens.
+const parseLocalDateTime = (value) => {
+  if (!value) return null;
+  const [datePart, timePart = "00:00:00"] = String(value).split("T");
+  const [year, month, day] = datePart.split("-").map(Number);
+  if (!year || !month || !day) return null;
+  const [hour = 0, minute = 0] = timePart.split(":").map(Number);
+  return new Date(year, month - 1, day, hour, minute);
 };
 
 const formatDate = (value) => {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "No date";
+  const date = parseLocalDateTime(value);
+  if (!date) return "No date";
   return date.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
@@ -53,7 +69,9 @@ export default function Announcements() {
     try {
       const res = await getAnnouncements();
       const sorted = [...res.data].sort(
-        (a, b) => new Date(b.publishDate) - new Date(a.publishDate),
+        (a, b) =>
+          (parseLocalDateTime(b.publishDate)?.getTime() || 0) -
+          (parseLocalDateTime(a.publishDate)?.getTime() || 0),
       );
       setData(sorted);
     } catch (error) {
@@ -94,7 +112,12 @@ export default function Announcements() {
     try {
       const payload = {
         ...formData,
-        publishDate: new Date(formData.publishDate).toISOString(),
+        // Send the wall-clock value straight through — no UTC conversion.
+        // formData.publishDate is "YYYY-MM-DDTHH:mm" from the datetime-local
+        // input, which the backend's LocalDateTime parses correctly as-is.
+        publishDate: formData.publishDate
+          ? `${formData.publishDate}:00`
+          : formData.publishDate,
       };
       if (editingId) {
         await updateAnnouncement(editingId, payload);
@@ -192,7 +215,9 @@ export default function Announcements() {
       ) : (
         <div className="space-y-3">
           {filtered.map((item) => {
-            const isFuture = new Date(item.publishDate).getTime() > Date.now();
+            const isFuture =
+              (parseLocalDateTime(item.publishDate)?.getTime() || 0) >
+              Date.now();
             return (
               <div
                 key={item.id}

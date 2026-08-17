@@ -31,18 +31,28 @@ const emptyForm = {
   imageFit: "cover",
 };
 
+// The backend stores startDate/endDate as a zone-naive LocalDate string
+// ("2026-08-20"). Parsing a date-only ISO string with `new Date(...)` treats
+// it as UTC midnight, which can shift a day off in some timezones once
+// converted back to local — so we parse/format the "YYYY-MM-DD" digits
+// directly instead of going through a Date object's UTC interpretation.
+
+// Backend "2026-08-20" -> date input "2026-08-20" (already matches, just guard)
 const formatDateInput = (value) => {
   if (!value) return "";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "";
-  const offset = date.getTimezoneOffset();
-  return new Date(date.getTime() - offset * 60000).toISOString().slice(0, 10);
+  const match = String(value).match(/^\d{4}-\d{2}-\d{2}/);
+  return match ? match[0] : "";
 };
 
 const formatDisplayDate = (value) => {
   if (!value) return "—";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "—";
+  const match = String(value).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!match) return "—";
+  const date = new Date(
+    Number(match[1]),
+    Number(match[2]) - 1,
+    Number(match[3]),
+  );
   return date.toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",

@@ -30,17 +30,31 @@ const emptyForm = {
   imageFit: "cover",
 };
 
+// The backend stores eventDate as a zone-naive LocalDateTime string
+// (e.g. "2026-08-20T10:00:00") — a plain wall-clock value with no
+// timezone attached. Never round-trip it through `new Date(...).toISOString()`
+// or `getTimezoneOffset()` math: that silently shifts the time (and
+// sometimes the date) by the browser's UTC offset. Just pass the digits
+// through as strings, and parse manually for display.
+
+// Backend "2026-08-20T10:00:00" -> datetime-local input "2026-08-20T10:00"
 const toLocalInput = (value) => {
   if (!value) return "";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "";
-  const offset = date.getTimezoneOffset();
-  return new Date(date.getTime() - offset * 60000).toISOString().slice(0, 16);
+  return String(value).slice(0, 16);
+};
+
+const parseLocalDateTime = (value) => {
+  if (!value) return null;
+  const [datePart, timePart = "00:00:00"] = String(value).split("T");
+  const [year, month, day] = datePart.split("-").map(Number);
+  if (!year || !month || !day) return null;
+  const [hour = 0, minute = 0] = timePart.split(":").map(Number);
+  return new Date(year, month - 1, day, hour, minute);
 };
 
 const dateParts = (value) => {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return { month: "—", day: "—", time: "" };
+  const date = parseLocalDateTime(value);
+  if (!date) return { month: "—", day: "—", time: "" };
   return {
     month: date.toLocaleDateString("en-US", { month: "short" }),
     day: date.toLocaleDateString("en-US", { day: "2-digit" }),
@@ -70,7 +84,9 @@ export default function Events() {
     try {
       const res = await getEvents();
       const sorted = [...res.data].sort(
-        (a, b) => new Date(a.eventDate) - new Date(b.eventDate),
+        (a, b) =>
+          (parseLocalDateTime(a.eventDate)?.getTime() || 0) -
+          (parseLocalDateTime(b.eventDate)?.getTime() || 0),
       );
       setData(sorted);
     } catch (error) {
@@ -114,7 +130,10 @@ export default function Events() {
     try {
       const payload = {
         ...formData,
-        eventDate: new Date(formData.eventDate).toISOString(),
+        // Send the wall-clock value straight through — no UTC conversion.
+        eventDate: formData.eventDate
+          ? `${formData.eventDate}:00`
+          : formData.eventDate,
       };
       if (editingId) {
         await updateEvent(editingId, payload);
@@ -213,7 +232,8 @@ export default function Events() {
       ) : (
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
           {filtered.map((item) => {
-            const isPast = new Date(item.eventDate).getTime() < Date.now();
+            const isPast =
+              (parseLocalDateTime(item.eventDate)?.getTime() || 0) < Date.now();
             const { month, day, time, weekday } = dateParts(item.eventDate);
 
             return (
