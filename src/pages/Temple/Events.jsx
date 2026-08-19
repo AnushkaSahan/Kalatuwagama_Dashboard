@@ -175,10 +175,10 @@ export default function Events() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-display text-2xl font-semibold text-gray-800">
+          <h1 className="font-display text-2xl font-semibold text-gray-800 dark:text-gray-100 ">
             Events
           </h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 ">
             Plan and manage temple events and programs.
           </p>
         </div>
@@ -189,7 +189,7 @@ export default function Events() {
 
       <Card>
         <div className="relative w-full sm:max-w-xs">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-gray-500 " />
           <Input
             placeholder="Search by title or location..."
             value={searchTerm}
@@ -204,21 +204,21 @@ export default function Events() {
           {[1, 2, 3, 4].map((item) => (
             <div
               key={item}
-              className="h-28 animate-pulse rounded-2xl border border-gray-100 bg-white shadow-card"
+              className="h-28 animate-pulse rounded-2xl border border-gray-100 bg-white shadow-card dark:bg-dark-850 dark:border-gray-800 "
             />
           ))}
         </div>
       ) : filtered.length === 0 ? (
         <Card className="flex flex-col items-center gap-3 py-14 text-center">
-          <div className="rounded-2xl bg-primary-50 p-4 text-primary-900">
+          <div className="rounded-2xl bg-primary-50 p-4 text-primary-900 dark:bg-primary-500/10 dark:text-primary-200 ">
             <CalendarOff className="h-7 w-7" />
           </div>
-          <p className="font-medium text-gray-700">
+          <p className="font-medium text-gray-700 dark:text-gray-200 ">
             {searchTerm
               ? "No matching events found"
               : "No events scheduled yet"}
           </p>
-          <p className="max-w-sm text-sm text-gray-500">
+          <p className="max-w-sm text-sm text-gray-500 dark:text-gray-400 ">
             {searchTerm
               ? "Try a different search term."
               : "Add the temple's next program or celebration."}
@@ -239,12 +239,12 @@ export default function Events() {
             return (
               <div
                 key={item.id}
-                className={`group overflow-hidden rounded-xl border border-gray-100 bg-white shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-soft ${
+                className={`group overflow-hidden rounded-xl border border-gray-100 bg-white shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-soft dark:bg-dark-850 dark:border-gray-800 ${
                   isPast ? "opacity-70" : ""
                 }`}
               >
                 {item.imageUrl && (
-                  <div className="relative h-36 overflow-hidden bg-gray-100">
+                  <div className="relative h-36 overflow-hidden bg-gray-100 dark:bg-dark-800 ">
                     <img
                       src={item.imageUrl}
                       alt={item.title}
@@ -263,7 +263,7 @@ export default function Events() {
                     <div
                       className={`absolute left-3 top-3 rounded-full px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide ${
                         isPast
-                          ? "bg-white/85 text-gray-700"
+                          ? "bg-white/85 text-gray-700 dark:bg-dark-900/85 dark:text-gray-200"
                           : "bg-primary-900/85 text-white"
                       }`}
                     >
@@ -275,11 +275,11 @@ export default function Events() {
                 <div className="flex flex-col gap-2 p-3">
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
-                      <h3 className="truncate font-display text-sm font-semibold text-gray-800">
+                      <h3 className="truncate font-display text-sm font-semibold text-gray-800 dark:text-gray-100 ">
                         {item.title}
                       </h3>
 
-                      <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-gray-500">
+                      <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-gray-500 dark:text-gray-400 ">
                         <span>{time}</span>
 
                         {item.location && (
@@ -294,14 +294,14 @@ export default function Events() {
                     </div>
 
                     {isPast && (
-                      <span className="shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-[9px] font-medium uppercase tracking-wide text-gray-500">
+                      <span className="shrink-0 rounded-full bg-gray-100 px-2 py-0.5 text-[9px] font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400 dark:bg-dark-800 ">
                         Past
                       </span>
                     )}
                   </div>
 
                   {item.description && (
-                    <p className="line-clamp-2 text-xs leading-relaxed text-gray-500">
+                    <p className="line-clamp-2 text-xs leading-relaxed text-gray-500 dark:text-gray-400 ">
                       {item.description}
                     </p>
                   )}
@@ -310,7 +310,7 @@ export default function Events() {
                     <button
                       type="button"
                       onClick={() => openEdit(item)}
-                      className="rounded-md p-1.5 text-gray-400 hover:bg-primary-50 hover:text-primary-900"
+                      className="rounded-md p-1.5 text-gray-400 hover:bg-primary-50 hover:text-primary-900 dark:text-gray-500 dark:bg-primary-500/10 dark:text-primary-200 "
                       title="Edit"
                     >
                       <Pencil className="h-3.5 w-3.5" />
@@ -319,7 +319,7 @@ export default function Events() {
                     <button
                       type="button"
                       onClick={() => handleDelete(item.id)}
-                      className="rounded-md p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-600"
+                      className="rounded-md p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-600 dark:text-gray-500 "
                       title="Delete"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
@@ -363,7 +363,7 @@ export default function Events() {
       >
         <form id="event-form" onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200 ">
               Title *
             </label>
             <Input
@@ -379,7 +379,7 @@ export default function Events() {
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
+              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200 ">
                 Event Date & Time *
               </label>
               <Input
@@ -392,7 +392,7 @@ export default function Events() {
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
+              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200 ">
                 Location
               </label>
               <Input
@@ -406,11 +406,11 @@ export default function Events() {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200 ">
               Description
             </label>
             <textarea
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none transition focus:border-transparent focus:ring-2 focus:ring-primary-900"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none transition focus:border-transparent focus:ring-2 focus:ring-primary-900 dark:border-gray-700 "
               rows="4"
               value={formData.description}
               onChange={(e) =>

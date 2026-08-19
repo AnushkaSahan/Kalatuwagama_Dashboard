@@ -104,14 +104,14 @@ export default function Messages() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-display text-2xl font-semibold text-gray-800">
+          <h1 className="font-display text-2xl font-semibold text-gray-800 dark:text-gray-100 ">
             Messages
           </h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 ">
             Inquiries submitted through the public contact form.
           </p>
         </div>
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-50 px-3 py-1.5 text-sm font-medium text-primary-900">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-primary-50 px-3 py-1.5 text-sm font-medium text-primary-900 dark:bg-primary-500/10 dark:text-primary-200 ">
           <MessageSquare className="h-4 w-4" />
           {data.length} total
         </span>
@@ -119,7 +119,7 @@ export default function Messages() {
 
       <Card>
         <div className="relative w-full sm:max-w-xs">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-gray-500 " />
           <Input
             placeholder="Search by name, email or subject..."
             value={searchTerm}
@@ -134,19 +134,19 @@ export default function Messages() {
           {[1, 2, 3].map((item) => (
             <div
               key={item}
-              className="h-20 animate-pulse rounded-2xl border border-gray-100 bg-white shadow-card"
+              className="h-20 animate-pulse rounded-2xl border border-gray-100 bg-white shadow-card dark:bg-dark-850 dark:border-gray-800 "
             />
           ))}
         </div>
       ) : filtered.length === 0 ? (
         <Card className="flex flex-col items-center gap-3 py-14 text-center">
-          <div className="rounded-2xl bg-primary-50 p-4 text-primary-900">
+          <div className="rounded-2xl bg-primary-50 p-4 text-primary-900 dark:bg-primary-500/10 dark:text-primary-200 ">
             <Mail className="h-7 w-7" />
           </div>
-          <p className="font-medium text-gray-700">
+          <p className="font-medium text-gray-700 dark:text-gray-200 ">
             {searchTerm ? "No matching messages found" : "No messages yet"}
           </p>
-          <p className="max-w-sm text-sm text-gray-500">
+          <p className="max-w-sm text-sm text-gray-500 dark:text-gray-400 ">
             {searchTerm
               ? "Try a different search term."
               : "Inquiries from the public contact form will appear here."}
@@ -160,26 +160,26 @@ export default function Messages() {
                 key={message.id}
                 type="button"
                 onClick={() => setSelectedMessage(message)}
-                className="flex w-full items-start gap-4 px-5 py-4 text-left transition-colors hover:bg-gray-50"
+                className="flex w-full items-start gap-4 px-5 py-4 text-left transition-colors hover:bg-gray-50 dark:bg-dark-950 dark:hover:bg-dark-800 "
               >
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-primary-900 to-primary-700 text-sm font-semibold text-white">
                   {initials(message.fullName)}
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-3">
-                    <p className="truncate text-sm font-semibold text-gray-800">
+                    <p className="truncate text-sm font-semibold text-gray-800 dark:text-gray-100 ">
                       {message.fullName || "Anonymous"}
                     </p>
-                    <span className="flex shrink-0 items-center gap-1 text-xs text-gray-400">
+                    <span className="flex shrink-0 items-center gap-1 text-xs text-gray-400 dark:text-gray-500 ">
                       <Clock3 className="h-3 w-3" />
                       {timeAgo(message.createdAt || message.created_at) ||
                         "No date"}
                     </span>
                   </div>
-                  <p className="mt-0.5 truncate text-sm font-medium text-primary-900">
+                  <p className="mt-0.5 truncate text-sm font-medium text-primary-900 dark:text-primary-200 ">
                     {message.subject || "No subject"}
                   </p>
-                  <p className="mt-0.5 truncate text-sm text-gray-500">
+                  <p className="mt-0.5 truncate text-sm text-gray-500 dark:text-gray-400 ">
                     {message.message}
                   </p>
                 </div>
@@ -189,7 +189,7 @@ export default function Messages() {
                     e.stopPropagation();
                     handleDelete(message.id);
                   }}
-                  className="shrink-0 self-center rounded-lg p-1.5 text-gray-300 transition-colors hover:bg-red-50 hover:text-red-600"
+                  className="shrink-0 self-center rounded-lg p-1.5 text-gray-300 transition-colors hover:bg-red-50 hover:text-red-600 dark:text-gray-600 dark:hover:bg-red-500/10 dark:hover:text-red-400"
                   title="Delete"
                 >
                   <Trash2 className="h-4 w-4" />
@@ -238,15 +238,15 @@ export default function Messages() {
                 {initials(selectedMessage.fullName)}
               </div>
               <div className="min-w-0">
-                <p className="truncate text-sm font-semibold text-gray-800">
+                <p className="truncate text-sm font-semibold text-gray-800 dark:text-gray-100 ">
                   {selectedMessage.fullName || "Anonymous"}
                 </p>
-                <p className="truncate text-sm text-gray-500">
+                <p className="truncate text-sm text-gray-500 dark:text-gray-400 ">
                   {selectedMessage.email}
                 </p>
               </div>
             </div>
-            <div className="rounded-xl bg-gray-50 p-4 text-sm leading-relaxed text-gray-700 whitespace-pre-wrap">
+            <div className="rounded-xl bg-gray-50 p-4 text-sm leading-relaxed text-gray-700 whitespace-pre-wrap dark:text-gray-200 dark:bg-dark-950 ">
               {selectedMessage.message}
             </div>
           </div>

@@ -169,10 +169,10 @@ export default function Students() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-display text-2xl font-semibold text-gray-800">
+          <h1 className="font-display text-2xl font-semibold text-gray-800 dark:text-gray-100 ">
             Students
           </h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 ">
             Daham Pasala students and their guardian contacts.
           </p>
         </div>
@@ -184,7 +184,7 @@ export default function Students() {
       <Card>
         <div className="flex flex-col gap-4">
           <div className="relative w-full sm:max-w-xs">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-gray-500 " />
             <Input
               placeholder="Search by student or guardian..."
               value={searchTerm}
@@ -203,7 +203,7 @@ export default function Students() {
                   className={`rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors ${
                     activeGrade === grade
                       ? "bg-primary-900 text-white shadow-sm"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                      : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-dark-800 dark:text-gray-300 dark:hover:bg-dark-700"
                   }`}
                 >
                   {grade === "All" ? "All Grades" : `Grade ${grade}`}
@@ -219,21 +219,21 @@ export default function Students() {
           {[1, 2, 3].map((item) => (
             <div
               key={item}
-              className="h-44 animate-pulse rounded-2xl border border-gray-100 bg-white shadow-card"
+              className="h-44 animate-pulse rounded-2xl border border-gray-100 bg-white shadow-card dark:bg-dark-850 dark:border-gray-800 "
             />
           ))}
         </div>
       ) : filtered.length === 0 ? (
         <Card className="flex flex-col items-center gap-3 py-14 text-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-50 text-lg font-semibold text-primary-900">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-50 text-lg font-semibold text-primary-900 dark:bg-primary-500/10 dark:text-primary-200 ">
             {searchTerm || activeGrade !== "All" ? "?" : "S"}
           </div>
-          <p className="font-medium text-gray-700">
+          <p className="font-medium text-gray-700 dark:text-gray-200 ">
             {searchTerm || activeGrade !== "All"
               ? "No matching students found"
               : "No students registered yet"}
           </p>
-          <p className="max-w-sm text-sm text-gray-500">
+          <p className="max-w-sm text-sm text-gray-500 dark:text-gray-400 ">
             {searchTerm || activeGrade !== "All"
               ? "Try a different search or grade."
               : "Register Daham Pasala students to see them here."}
@@ -251,18 +251,18 @@ export default function Students() {
             return (
               <div
                 key={item.id}
-                className="group flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white p-5 shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-soft"
+                className="group flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white p-5 shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-soft dark:bg-dark-850 dark:border-gray-800 "
               >
                 <div className="flex items-start gap-4">
                   <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-accent-500 to-accent-700 text-base font-semibold text-white ring-2 ring-accent-50">
                     {initials(item.fullName)}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <h3 className="truncate font-display text-base font-semibold text-gray-800">
+                    <h3 className="truncate font-display text-base font-semibold text-gray-800 dark:text-gray-100 ">
                       {item.fullName}
                     </h3>
                     {item.grade && (
-                      <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-primary-50 px-2.5 py-0.5 text-xs font-medium text-primary-900">
+                      <span className="mt-1 inline-flex items-center gap-1 rounded-full bg-primary-50 px-2.5 py-0.5 text-xs font-medium text-primary-900 dark:bg-primary-500/10 dark:text-primary-200 ">
                         <GraduationCap className="h-3 w-3" />
                         Grade {item.grade}
                       </span>
@@ -270,7 +270,7 @@ export default function Students() {
                   </div>
                 </div>
 
-                <div className="mt-4 space-y-1.5 text-sm text-gray-500">
+                <div className="mt-4 space-y-1.5 text-sm text-gray-500 dark:text-gray-400 ">
                   <div className="flex items-center gap-1.5">
                     <User className="h-3.5 w-3.5" />
                     {item.guardianName}
@@ -281,8 +281,8 @@ export default function Students() {
                   </div>
                 </div>
 
-                <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3">
-                  <div className="flex items-center gap-1.5 text-xs text-gray-400">
+                <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3 dark:border-gray-800 ">
+                  <div className="flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500 ">
                     <Clock3 className="h-3.5 w-3.5" />
                     {added ? `Updated ${added}` : "No date"}
                   </div>
@@ -290,7 +290,7 @@ export default function Students() {
                     <button
                       type="button"
                       onClick={() => openEdit(item)}
-                      className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-primary-50 hover:text-primary-900"
+                      className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-primary-50 hover:text-primary-900 dark:text-gray-500 dark:bg-primary-500/10 dark:text-primary-200 "
                       title="Edit"
                     >
                       <Pencil className="h-4 w-4" />
@@ -298,7 +298,7 @@ export default function Students() {
                     <button
                       type="button"
                       onClick={() => handleDelete(item.id)}
-                      className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                      className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600 dark:text-gray-500 "
                       title="Delete"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -342,7 +342,7 @@ export default function Students() {
       >
         <form id="student-form" onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200 ">
               Full Name *
             </label>
             <Input
@@ -356,7 +356,7 @@ export default function Students() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200 ">
               Grade
             </label>
             <Input
@@ -376,7 +376,7 @@ export default function Students() {
             </datalist>
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200 ">
               Guardian Name *
             </label>
             <Input
@@ -389,7 +389,7 @@ export default function Students() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200 ">
               Guardian Phone *
             </label>
             <Input

@@ -94,20 +94,20 @@ export default function ImagePositionModal({
   return (
     <div className="fixed inset-0 z-[80] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" />
-      <div className="relative flex w-full max-w-md flex-col rounded-2xl bg-white shadow-2xl">
-        <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+      <div className="relative flex w-full max-w-md flex-col rounded-2xl bg-white shadow-2xl dark:bg-dark-850 ">
+        <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4 dark:border-gray-800 ">
           <div>
-            <h2 className="text-base font-semibold text-gray-800">
+            <h2 className="text-base font-semibold text-gray-800 dark:text-gray-100 ">
               Choose what shows
             </h2>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-500 dark:text-gray-400 ">
               Drag a corner to zoom, drag the photo to reposition it.
             </p>
           </div>
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+            className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:text-gray-300 dark:text-gray-500 dark:bg-dark-800 dark:hover:bg-dark-800 dark:hover:text-gray-300 "
           >
             <X className="h-5 w-5" />
           </button>
@@ -146,19 +146,19 @@ export default function ImagePositionModal({
                 onPointerMove={handleResizeMove}
                 onPointerUp={handleResizeEnd}
                 onPointerLeave={handleResizeEnd}
-                className="absolute z-10 flex h-4 w-4 items-center justify-center rounded-full border-2 border-primary-900 bg-white shadow-md touch-none"
+                className="absolute z-10 flex h-4 w-4 items-center justify-center rounded-full border-2 border-primary-900 bg-white shadow-md touch-none dark:bg-dark-850 "
                 style={corner.style}
               />
             ))}
           </div>
 
-          <div className="flex items-center gap-1.5 text-xs text-gray-400">
+          <div className="flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500 ">
             <Move className="h-3.5 w-3.5" />
             Drag to pan · Drag a corner to zoom
             <button
               type="button"
               onClick={handleReset}
-              className="ml-2 inline-flex items-center gap-1 rounded-lg px-2 py-0.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+              className="ml-2 inline-flex items-center gap-1 rounded-lg px-2 py-0.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:text-gray-300 dark:text-gray-500 dark:bg-dark-800 dark:hover:bg-dark-800 dark:hover:text-gray-300 "
               title="Reset"
             >
               <RotateCcw className="h-3 w-3" />
@@ -167,7 +167,7 @@ export default function ImagePositionModal({
           </div>
         </div>
 
-        <div className="flex items-center justify-end gap-2 border-t border-gray-100 bg-gray-50/60 px-5 py-4">
+        <div className="flex items-center justify-end gap-2 border-t border-gray-100 bg-gray-50/60 px-5 py-4 dark:bg-dark-900/60 dark:border-gray-800 ">
           <Button type="button" variant="ghost" onClick={onCancel}>
             Cancel
           </Button>

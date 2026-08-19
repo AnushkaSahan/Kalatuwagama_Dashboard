@@ -10,8 +10,13 @@
   body {
     @apply bg-gray-50 text-gray-800 antialiased dark:bg-dark-950 dark:text-gray-100;
     transition:
-      background-color 0.3s ease,
-      color 0.3s ease;
+      background-color 0.35s ease,
+      color 0.35s ease;
+  }
+  html.dark body {
+    background-image:
+      radial-gradient(at 0% 0%, rgba(111,29,27,0.10) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(212,175,55,0.04) 0px, transparent 50%);
   }
   html[lang="si"] body {
     font-family: "Noto Sans Sinhala", "Inter", sans-serif;
@@ -22,10 +27,10 @@
   input,
   select,
   textarea {
-    @apply border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-900 focus:border-transparent dark:border-gray-700 dark:bg-dark-850 dark:text-gray-100 dark:placeholder-gray-500;
+    @apply border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-900/30 focus:border-primary-700 dark:border-gray-700 dark:bg-dark-850 dark:text-gray-100 dark:placeholder-gray-500;
     transition:
       background-color 0.3s ease,
-      border-color 0.3s ease,
+      border-color 0.2s ease,
       box-shadow 0.2s ease;
   }
   button {
@@ -34,30 +39,91 @@
 }
 
 @layer components {
+  /* ── Glass panels ── */
   .glass {
-    background: rgba(255, 255, 255, 0.72);
-    backdrop-filter: blur(16px) saturate(160%);
-    -webkit-backdrop-filter: blur(16px) saturate(160%);
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.78);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.8);
   }
   .dark .glass {
-    background: rgba(30, 33, 38, 0.72);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(30, 33, 38, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.04);
   }
 
-  /* Premium custom scrollbar for both themes */
+  /* ── Stat card ── */
+  .stat-card {
+    @apply relative overflow-hidden rounded-2xl border bg-white p-6 shadow-card transition-all duration-300 hover:-translate-y-0.5 hover:shadow-card-hover border-gray-100 dark:border-white/[0.06] dark:bg-dark-850;
+  }
+  .stat-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #6F1D1B, #D4AF37);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .stat-card:hover::before {
+    opacity: 1;
+  }
+
+  /* ── Data table ── */
+  .data-table {
+    @apply w-full border-collapse text-sm;
+  }
+  .data-table th {
+    @apply bg-gray-50/80 px-4 py-3 text-left text-xs font-bold uppercase tracking-[0.12em] text-gray-500 dark:bg-dark-900 dark:text-gray-400;
+  }
+  .data-table td {
+    @apply border-b border-gray-100 px-4 py-3.5 text-gray-700 dark:border-white/[0.05] dark:text-gray-300;
+  }
+  .data-table tr:hover td {
+    @apply bg-primary-50/50 dark:bg-primary-500/[0.04];
+  }
+  .data-table tr:last-child td {
+    @apply border-b-0;
+  }
+
+  /* ── Admin badge ── */
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold;
+  }
+  .badge-success {
+    @apply badge bg-green-100 text-green-700 dark:bg-green-500/15 dark:text-green-400;
+  }
+  .badge-warning {
+    @apply badge bg-amber-100 text-amber-700 dark:bg-amber-500/15 dark:text-amber-400;
+  }
+  .badge-danger {
+    @apply badge bg-red-100 text-red-700 dark:bg-red-500/15 dark:text-red-400;
+  }
+  .badge-primary {
+    @apply badge bg-primary-50 text-primary-900 dark:bg-primary-500/15 dark:text-primary-300;
+  }
+
+  /* ── Admin form card ── */
+  .form-card {
+    @apply rounded-2xl border border-gray-100 bg-white p-6 shadow-soft dark:border-white/[0.06] dark:bg-dark-850;
+  }
+
+  /* ── Scrollbar ── */
   ::-webkit-scrollbar {
-    width: 9px;
-    height: 9px;
+    width: 6px;
+    height: 6px;
   }
   ::-webkit-scrollbar-track {
     @apply bg-transparent;
   }
   ::-webkit-scrollbar-thumb {
-    @apply rounded-full bg-gray-300 hover:bg-gray-400 dark:bg-dark-600 dark:hover:bg-dark-500;
-    border: 2px solid transparent;
+    @apply rounded-full bg-gray-200 hover:bg-gray-300 dark:bg-dark-600 dark:hover:bg-dark-500;
+    border: 1px solid transparent;
     background-clip: padding-box;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.25s ease;
   }
 }
 
@@ -74,6 +140,8 @@
   .dark .recharts-default-tooltip {
     @apply bg-dark-850 !important;
     border: 1px solid #32373d !important;
+    border-radius: 12px !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3) !important;
   }
   .dark .recharts-default-tooltip .recharts-tooltip-item,
   .dark .recharts-default-tooltip .recharts-tooltip-label {
@@ -81,5 +149,9 @@
   }
   .dark .recharts-cartesian-axis-tick text {
     fill: #9aa1ab !important;
+  }
+  .dark .recharts-cartesian-grid-horizontal line,
+  .dark .recharts-cartesian-grid-vertical line {
+    stroke: rgba(255,255,255,0.05) !important;
   }
 }

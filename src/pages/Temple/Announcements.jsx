@@ -158,10 +158,10 @@ export default function Announcements() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-display text-2xl font-semibold text-gray-800">
+          <h1 className="font-display text-2xl font-semibold text-gray-800 dark:text-gray-100 ">
             Announcements
           </h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 ">
             Publish notices and updates for the temple community.
           </p>
         </div>
@@ -172,7 +172,7 @@ export default function Announcements() {
 
       <Card>
         <div className="relative w-full sm:max-w-xs">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-gray-500 " />
           <Input
             placeholder="Search announcements..."
             value={searchTerm}
@@ -187,21 +187,21 @@ export default function Announcements() {
           {[1, 2, 3].map((item) => (
             <div
               key={item}
-              className="h-24 animate-pulse rounded-2xl border border-gray-100 bg-white shadow-card"
+              className="h-24 animate-pulse rounded-2xl border border-gray-100 bg-white shadow-card dark:bg-dark-850 dark:border-gray-800 "
             />
           ))}
         </div>
       ) : filtered.length === 0 ? (
         <Card className="flex flex-col items-center gap-3 py-14 text-center">
-          <div className="rounded-2xl bg-primary-50 p-4 text-primary-900">
+          <div className="rounded-2xl bg-primary-50 p-4 text-primary-900 dark:bg-primary-500/10 dark:text-primary-200 ">
             <Megaphone className="h-7 w-7" />
           </div>
-          <p className="font-medium text-gray-700">
+          <p className="font-medium text-gray-700 dark:text-gray-200 ">
             {searchTerm
               ? "No matching announcements found"
               : "No announcements published yet"}
           </p>
-          <p className="max-w-sm text-sm text-gray-500">
+          <p className="max-w-sm text-sm text-gray-500 dark:text-gray-400 ">
             {searchTerm
               ? "Try a different search term."
               : "Share news and updates with the temple community."}
@@ -221,7 +221,7 @@ export default function Announcements() {
             return (
               <div
                 key={item.id}
-                className="group flex items-start gap-4 rounded-2xl border border-gray-100 bg-white p-5 shadow-card transition-all duration-200 hover:shadow-soft"
+                className="group flex items-start gap-4 rounded-2xl border border-gray-100 bg-white p-5 shadow-card transition-all duration-200 hover:shadow-soft dark:bg-dark-850 dark:border-gray-800 "
               >
                 <div className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-50 text-accent-700">
                   <Megaphone className="h-5 w-5" />
@@ -229,19 +229,19 @@ export default function Announcements() {
 
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="font-display text-base font-semibold text-gray-800">
+                    <h3 className="font-display text-base font-semibold text-gray-800 dark:text-gray-100 ">
                       {item.title}
                     </h3>
                     {isFuture && (
-                      <span className="rounded-full bg-primary-50 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-primary-900">
+                      <span className="rounded-full bg-primary-50 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-primary-900 dark:bg-primary-500/10 dark:text-primary-200 ">
                         Scheduled
                       </span>
                     )}
                   </div>
-                  <p className="mt-1 text-sm text-gray-500 line-clamp-2">
+                  <p className="mt-1 text-sm text-gray-500 line-clamp-2 dark:text-gray-400 ">
                     {item.description || "No description provided."}
                   </p>
-                  <p className="mt-2 text-xs text-gray-400">
+                  <p className="mt-2 text-xs text-gray-400 dark:text-gray-500 ">
                     {formatDate(item.publishDate)}
                   </p>
                 </div>
@@ -250,7 +250,7 @@ export default function Announcements() {
                   <button
                     type="button"
                     onClick={() => openEdit(item)}
-                    className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-primary-50 hover:text-primary-900"
+                    className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-primary-50 hover:text-primary-900 dark:text-gray-500 dark:bg-primary-500/10 dark:text-primary-200 "
                     title="Edit"
                   >
                     <Pencil className="h-4 w-4" />
@@ -258,7 +258,7 @@ export default function Announcements() {
                   <button
                     type="button"
                     onClick={() => handleDelete(item.id)}
-                    className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                    className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600 dark:text-gray-500 "
                     title="Delete"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -305,7 +305,7 @@ export default function Announcements() {
           className="space-y-4"
         >
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200 ">
               Title *
             </label>
             <Input
@@ -320,11 +320,11 @@ export default function Announcements() {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200 ">
               Description
             </label>
             <textarea
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none transition focus:border-transparent focus:ring-2 focus:ring-primary-900"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none transition focus:border-transparent focus:ring-2 focus:ring-primary-900 dark:border-gray-700 "
               rows="5"
               value={formData.description}
               onChange={(e) =>
@@ -335,7 +335,7 @@ export default function Announcements() {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200 ">
               Publish Date & Time *
             </label>
             <Input

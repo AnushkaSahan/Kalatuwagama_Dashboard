@@ -144,10 +144,10 @@ export default function MonkManagement() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-display text-2xl font-semibold text-gray-800">
+          <h1 className="font-display text-2xl font-semibold text-gray-800 dark:text-gray-100 ">
             Monks
           </h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 ">
             Manage resident monks, their roles and biographies.
           </p>
         </div>
@@ -158,7 +158,7 @@ export default function MonkManagement() {
 
       <Card>
         <div className="relative w-full sm:max-w-xs">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-gray-500 " />
           <Input
             placeholder="Search by name or position..."
             value={searchTerm}
@@ -173,19 +173,19 @@ export default function MonkManagement() {
           {[1, 2, 3].map((item) => (
             <div
               key={item}
-              className="h-56 animate-pulse rounded-2xl border border-gray-100 bg-white shadow-card"
+              className="h-56 animate-pulse rounded-2xl border border-gray-100 bg-white shadow-card dark:bg-dark-850 dark:border-gray-800 "
             />
           ))}
         </div>
       ) : filtered.length === 0 ? (
         <Card className="flex flex-col items-center gap-3 py-14 text-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-50 text-lg font-semibold text-primary-900">
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary-50 text-lg font-semibold text-primary-900 dark:bg-primary-500/10 dark:text-primary-200 ">
             {searchTerm ? "?" : "M"}
           </div>
-          <p className="font-medium text-gray-700">
+          <p className="font-medium text-gray-700 dark:text-gray-200 ">
             {searchTerm ? "No matching monks found" : "No monks added yet"}
           </p>
-          <p className="max-w-sm text-sm text-gray-500">
+          <p className="max-w-sm text-sm text-gray-500 dark:text-gray-400 ">
             {searchTerm
               ? "Try a different search term."
               : "Add the resident monks so visitors can learn about them."}
@@ -203,7 +203,7 @@ export default function MonkManagement() {
             return (
               <div
                 key={item.id}
-                className="group flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white p-5 shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-soft"
+                className="group flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white p-5 shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-soft dark:bg-dark-850 dark:border-gray-800 "
               >
                 <div className="flex items-start gap-4">
                   {item.imageUrl ? (
@@ -225,7 +225,7 @@ export default function MonkManagement() {
                     </div>
                   )}
                   <div className="min-w-0 flex-1">
-                    <h3 className="truncate font-display text-lg font-semibold text-gray-800">
+                    <h3 className="truncate font-display text-lg font-semibold text-gray-800 dark:text-gray-100 ">
                       {item.name}
                     </h3>
                     {item.position && (
@@ -236,12 +236,12 @@ export default function MonkManagement() {
                   </div>
                 </div>
 
-                <p className="mt-4 flex-1 text-sm leading-relaxed text-gray-500 line-clamp-3">
+                <p className="mt-4 flex-1 text-sm leading-relaxed text-gray-500 line-clamp-3 dark:text-gray-400 ">
                   {item.biography || "No biography provided."}
                 </p>
 
-                <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3">
-                  <div className="flex items-center gap-1.5 text-xs text-gray-400">
+                <div className="mt-4 flex items-center justify-between border-t border-gray-100 pt-3 dark:border-gray-800 ">
+                  <div className="flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500 ">
                     <Clock3 className="h-3.5 w-3.5" />
                     {updated ? `Updated ${updated}` : "No date"}
                   </div>
@@ -249,7 +249,7 @@ export default function MonkManagement() {
                     <button
                       type="button"
                       onClick={() => openEdit(item)}
-                      className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-primary-50 hover:text-primary-900"
+                      className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-primary-50 hover:text-primary-900 dark:text-gray-500 dark:bg-primary-500/10 dark:text-primary-200 "
                       title="Edit"
                     >
                       <Pencil className="h-4 w-4" />
@@ -257,7 +257,7 @@ export default function MonkManagement() {
                     <button
                       type="button"
                       onClick={() => handleDelete(item.id)}
-                      className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                      className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600 dark:text-gray-500 "
                       title="Delete"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -301,7 +301,7 @@ export default function MonkManagement() {
       >
         <form id="monk-form" onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200 ">
               Name *
             </label>
             <Input
@@ -316,7 +316,7 @@ export default function MonkManagement() {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200 ">
               Position
             </label>
             <Input
@@ -329,11 +329,11 @@ export default function MonkManagement() {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200 ">
               Biography
             </label>
             <textarea
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none transition focus:border-transparent focus:ring-2 focus:ring-primary-900"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none transition focus:border-transparent focus:ring-2 focus:ring-primary-900 dark:border-gray-700 "
               rows="5"
               value={formData.biography}
               onChange={(e) =>

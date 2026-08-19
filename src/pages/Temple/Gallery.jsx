@@ -204,10 +204,10 @@ export default function Gallery() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-display text-2xl font-semibold text-gray-800">
+          <h1 className="font-display text-2xl font-semibold text-gray-800 dark:text-gray-100 ">
             Gallery
           </h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 ">
             Photos organized by temple event — pick an event, then add its
             photos.
           </p>
@@ -223,7 +223,7 @@ export default function Gallery() {
 
       <Card>
         <div className="relative w-full sm:max-w-xs">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-gray-500 " />
           <Input
             placeholder="Search by event name..."
             value={searchTerm}
@@ -238,17 +238,19 @@ export default function Gallery() {
           {[1, 2, 3].map((item) => (
             <div
               key={item}
-              className="h-56 animate-pulse rounded-2xl border border-gray-100 bg-white shadow-card"
+              className="h-56 animate-pulse rounded-2xl border border-gray-100 bg-white shadow-card dark:bg-dark-850 dark:border-gray-800 "
             />
           ))}
         </div>
       ) : events.length === 0 ? (
         <Card className="flex flex-col items-center gap-3 py-14 text-center">
-          <div className="rounded-2xl bg-primary-50 p-4 text-primary-900">
+          <div className="rounded-2xl bg-primary-50 p-4 text-primary-900 dark:bg-primary-500/10 dark:text-primary-200 ">
             <Calendar className="h-7 w-7" />
           </div>
-          <p className="font-medium text-gray-700">No events yet</p>
-          <p className="max-w-sm text-sm text-gray-500">
+          <p className="font-medium text-gray-700 dark:text-gray-200 ">
+            No events yet
+          </p>
+          <p className="max-w-sm text-sm text-gray-500 dark:text-gray-400 ">
             Gallery photos are organized under events. Create an event first,
             then come back here to add its photos.
           </p>
@@ -260,11 +262,13 @@ export default function Gallery() {
         </Card>
       ) : filteredAlbums.length === 0 ? (
         <Card className="flex flex-col items-center gap-3 py-14 text-center">
-          <div className="rounded-2xl bg-primary-50 p-4 text-primary-900">
+          <div className="rounded-2xl bg-primary-50 p-4 text-primary-900 dark:bg-primary-500/10 dark:text-primary-200 ">
             <Images className="h-7 w-7" />
           </div>
-          <p className="font-medium text-gray-700">No matching events</p>
-          <p className="max-w-sm text-sm text-gray-500">
+          <p className="font-medium text-gray-700 dark:text-gray-200 ">
+            No matching events
+          </p>
+          <p className="max-w-sm text-sm text-gray-500 dark:text-gray-400 ">
             Try a different search term.
           </p>
         </Card>
@@ -275,14 +279,14 @@ export default function Gallery() {
             return (
               <div
                 key={album.event.id}
-                className="group flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-soft"
+                className="group flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-soft dark:bg-dark-850 dark:border-gray-800 "
                 onClick={() =>
                   album.photos.length > 0
                     ? setActiveAlbumId(album.event.id)
                     : openUpload(album.event.id)
                 }
               >
-                <div className="relative h-40 w-full overflow-hidden bg-gray-100">
+                <div className="relative h-40 w-full overflow-hidden bg-gray-100 dark:bg-dark-800 ">
                   {cover ? (
                     <FocalImage
                       src={cover.imageUrl}
@@ -293,7 +297,7 @@ export default function Gallery() {
                       }}
                     />
                   ) : (
-                    <div className="flex h-full w-full flex-col items-center justify-center gap-1 bg-gradient-to-br from-primary-50 to-accent-50 text-primary-900/40">
+                    <div className="flex h-full w-full flex-col items-center justify-center gap-1 bg-gradient-to-br from-primary-50 to-accent-50 text-primary-900/40 dark:text-primary-200 ">
                       <ImagePlus className="h-7 w-7" />
                       <span className="text-xs font-medium">Add photos</span>
                     </div>
@@ -306,10 +310,10 @@ export default function Gallery() {
                   )}
                 </div>
                 <div className="flex flex-1 flex-col p-4">
-                  <h3 className="font-display text-base font-semibold text-gray-800">
+                  <h3 className="font-display text-base font-semibold text-gray-800 dark:text-gray-100 ">
                     {album.event.title}
                   </h3>
-                  <p className="mt-1 flex items-center gap-1.5 text-xs text-gray-400">
+                  <p className="mt-1 flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500 ">
                     <Calendar className="h-3.5 w-3.5" />
                     {formatEventDate(album.event.eventDate || album.event.date)}
                   </p>
@@ -346,8 +350,8 @@ export default function Gallery() {
         }
       >
         {activeAlbum?.photos.length === 0 ? (
-          <div className="flex flex-col items-center gap-2 py-10 text-center text-sm text-gray-500">
-            <Images className="h-7 w-7 text-gray-300" />
+          <div className="flex flex-col items-center gap-2 py-10 text-center text-sm text-gray-500 dark:text-gray-400 ">
+            <Images className="h-7 w-7 text-gray-300 dark:text-gray-600" />
             No photos added to this event yet.
           </div>
         ) : (
@@ -355,7 +359,7 @@ export default function Gallery() {
             {activeAlbum?.photos.map((photo) => (
               <div
                 key={photo.id}
-                className="group relative aspect-square overflow-hidden rounded-xl border border-gray-100 bg-gray-100"
+                className="group relative aspect-square overflow-hidden rounded-xl border border-gray-100 bg-gray-100 dark:bg-dark-800 dark:border-gray-800 "
               >
                 <FocalImage
                   src={photo.imageUrl}
@@ -369,7 +373,7 @@ export default function Gallery() {
                   <button
                     type="button"
                     onClick={() => openEditPhoto(photo)}
-                    className="rounded-lg bg-white/90 p-1.5 text-gray-700 backdrop-blur hover:bg-white"
+                    className="rounded-lg bg-white/90 p-1.5 text-gray-700 backdrop-blur hover:bg-white dark:text-gray-200 dark:bg-dark-850 "
                     title="Edit"
                   >
                     <Pencil className="h-3.5 w-3.5" />
@@ -377,7 +381,7 @@ export default function Gallery() {
                   <button
                     type="button"
                     onClick={() => handleDeletePhoto(photo.id)}
-                    className="rounded-lg bg-white/90 p-1.5 text-red-600 backdrop-blur hover:bg-white"
+                    className="rounded-lg bg-white/90 p-1.5 text-red-600 backdrop-blur hover:bg-white dark:bg-dark-850 "
                     title="Delete"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
@@ -421,18 +425,18 @@ export default function Gallery() {
           className="space-y-4"
         >
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200 ">
               Event *
             </label>
             {lockEventPicker ? (
-              <div className="flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700">
-                <Calendar className="h-4 w-4 text-primary-900" />
+              <div className="flex items-center gap-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700 dark:text-gray-200 dark:bg-dark-950 dark:border-gray-700 ">
+                <Calendar className="h-4 w-4 text-primary-900 dark:text-primary-200 " />
                 {events.find((ev) => ev.id === uploadEventId)?.title ||
                   "Selected event"}
               </div>
             ) : (
               <select
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none transition focus:border-transparent focus:ring-2 focus:ring-primary-900"
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 outline-none transition focus:border-transparent focus:ring-2 focus:ring-primary-900 dark:border-gray-700 "
                 value={uploadEventId}
                 onChange={(e) => setUploadEventId(e.target.value)}
                 required
@@ -454,7 +458,7 @@ export default function Gallery() {
           />
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200 ">
               Category (applied to all)
             </label>
             <Input
@@ -499,7 +503,7 @@ export default function Gallery() {
             aspect="video"
           />
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200 ">
               Caption
             </label>
             <Input
@@ -511,7 +515,7 @@ export default function Gallery() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200 ">
               Category
             </label>
             <Input

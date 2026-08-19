@@ -146,10 +146,10 @@ export default function DonationDetails() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-display text-2xl font-semibold text-gray-800">
+          <h1 className="font-display text-2xl font-semibold text-gray-800 dark:text-gray-100 ">
             Donations
           </h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 ">
             Bank accounts and QR codes shown on the public donations page.
           </p>
         </div>
@@ -160,7 +160,7 @@ export default function DonationDetails() {
 
       <Card>
         <div className="relative w-full sm:max-w-xs">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-gray-500 " />
           <Input
             placeholder="Search by bank, account name or number..."
             value={searchTerm}
@@ -175,21 +175,21 @@ export default function DonationDetails() {
           {[1, 2, 3].map((item) => (
             <div
               key={item}
-              className="h-52 animate-pulse rounded-2xl border border-gray-100 bg-white shadow-card"
+              className="h-52 animate-pulse rounded-2xl border border-gray-100 bg-white shadow-card dark:bg-dark-850 dark:border-gray-800 "
             />
           ))}
         </div>
       ) : filtered.length === 0 ? (
         <Card className="flex flex-col items-center gap-3 py-14 text-center">
-          <div className="rounded-2xl bg-primary-50 p-4 text-primary-900">
+          <div className="rounded-2xl bg-primary-50 p-4 text-primary-900 dark:bg-primary-500/10 dark:text-primary-200 ">
             <Landmark className="h-7 w-7" />
           </div>
-          <p className="font-medium text-gray-700">
+          <p className="font-medium text-gray-700 dark:text-gray-200 ">
             {searchTerm
               ? "No matching accounts found"
               : "No donation accounts added yet"}
           </p>
-          <p className="max-w-sm text-sm text-gray-500">
+          <p className="max-w-sm text-sm text-gray-500 dark:text-gray-400 ">
             {searchTerm
               ? "Try a different search term."
               : "Add a bank account so devotees know where to send contributions."}
@@ -205,17 +205,17 @@ export default function DonationDetails() {
           {filtered.map((item) => (
             <div
               key={item.id}
-              className="group flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-soft"
+              className="group flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-soft dark:bg-dark-850 dark:border-gray-800 "
             >
               <div className="flex items-start gap-4 p-5">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary-50 text-primary-900">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary-50 text-primary-900 dark:bg-primary-500/10 dark:text-primary-200 ">
                   <Landmark className="h-6 w-6" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h3 className="truncate font-display text-lg font-semibold text-gray-800">
+                  <h3 className="truncate font-display text-lg font-semibold text-gray-800 dark:text-gray-100 ">
                     {item.bankName}
                   </h3>
-                  <p className="truncate text-sm text-gray-500">
+                  <p className="truncate text-sm text-gray-500 dark:text-gray-400 ">
                     {item.accountName}
                     {item.branch ? ` · ${item.branch}` : ""}
                   </p>
@@ -224,7 +224,7 @@ export default function DonationDetails() {
                   <button
                     type="button"
                     onClick={() => setQrPreview(item)}
-                    className="shrink-0 overflow-hidden rounded-xl border border-gray-100 transition-transform hover:scale-105"
+                    className="shrink-0 overflow-hidden rounded-xl border border-gray-100 transition-transform hover:scale-105 dark:border-gray-800 "
                     title="View QR code"
                   >
                     <img
@@ -243,14 +243,14 @@ export default function DonationDetails() {
                 )}
               </div>
 
-              <div className="mx-5 flex items-center justify-between rounded-xl bg-gray-50 px-3.5 py-2.5">
-                <span className="font-mono text-sm tracking-wide text-gray-700">
+              <div className="mx-5 flex items-center justify-between rounded-xl bg-gray-50 px-3.5 py-2.5 dark:bg-dark-950 ">
+                <span className="font-mono text-sm tracking-wide text-gray-700 dark:text-gray-200 ">
                   {item.accountNumber}
                 </span>
                 <button
                   type="button"
                   onClick={() => handleCopy(item)}
-                  className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-white hover:text-primary-900"
+                  className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-white hover:text-primary-900 dark:text-gray-500 dark:bg-dark-850 dark:text-primary-200 "
                   title="Copy account number"
                 >
                   {copiedId === item.id ? (
@@ -261,11 +261,11 @@ export default function DonationDetails() {
                 </button>
               </div>
 
-              <div className="mt-auto flex items-center justify-end gap-1 border-t border-gray-100 px-3 py-2">
+              <div className="mt-auto flex items-center justify-end gap-1 border-t border-gray-100 px-3 py-2 dark:border-gray-800 ">
                 <button
                   type="button"
                   onClick={() => openEdit(item)}
-                  className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-primary-50 hover:text-primary-900"
+                  className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-primary-50 hover:text-primary-900 dark:text-gray-500 dark:bg-primary-500/10 dark:text-primary-200 "
                   title="Edit"
                 >
                   <Pencil className="h-4 w-4" />
@@ -273,7 +273,7 @@ export default function DonationDetails() {
                 <button
                   type="button"
                   onClick={() => handleDelete(item.id)}
-                  className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600"
+                  className="rounded-lg p-1.5 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-600 dark:text-gray-500 "
                   title="Delete"
                 >
                   <Trash2 className="h-4 w-4" />
@@ -292,7 +292,7 @@ export default function DonationDetails() {
         >
           <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
           <div
-            className="relative z-10 flex max-w-xs flex-col items-center rounded-2xl bg-white p-6 text-center shadow-2xl"
+            className="relative z-10 flex max-w-xs flex-col items-center rounded-2xl bg-white p-6 text-center shadow-2xl dark:bg-dark-850 "
             onClick={(e) => e.stopPropagation()}
           >
             <img
@@ -304,10 +304,12 @@ export default function DonationDetails() {
                   : "object-cover"
               }`}
             />
-            <p className="mt-4 font-display text-base font-semibold text-gray-800">
+            <p className="mt-4 font-display text-base font-semibold text-gray-800 dark:text-gray-100 ">
               {qrPreview.bankName}
             </p>
-            <p className="text-sm text-gray-500">{qrPreview.accountNumber}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 ">
+              {qrPreview.accountNumber}
+            </p>
             <Button
               variant="outline"
               className="mt-4"
@@ -350,7 +352,7 @@ export default function DonationDetails() {
       >
         <form id="donation-form" onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200 ">
               Bank Name *
             </label>
             <Input
@@ -363,7 +365,7 @@ export default function DonationDetails() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200 ">
               Account Name *
             </label>
             <Input
@@ -376,7 +378,7 @@ export default function DonationDetails() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200 ">
               Account Number *
             </label>
             <Input
@@ -389,7 +391,7 @@ export default function DonationDetails() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200 ">
               Branch
             </label>
             <Input

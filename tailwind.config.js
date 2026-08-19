@@ -68,6 +68,10 @@ export default {
           "0 0 0 1px rgba(111, 29, 27, 0.12), 0 8px 30px -6px rgba(111, 29, 27, 0.35)",
         "card-hover":
           "0 20px 50px -20px rgba(0, 0, 0, 0.18), 0 4px 12px -4px rgba(0, 0, 0, 0.06)",
+        "glow-accent": "0 0 0 1px rgba(212,175,55,0.2), 0 8px 32px -6px rgba(212,175,55,0.4)",
+        "glow-primary": "0 0 0 1px rgba(111,29,27,0.2), 0 8px 32px -6px rgba(111,29,27,0.4)",
+        "inner-accent": "inset 0 1px 0 rgba(212,175,55,0.12)",
+        "sidebar": "4px 0 24px rgba(0,0,0,0.08)",
       },
       backgroundImage: {
         "gradient-primary":
@@ -78,6 +82,12 @@ export default {
           "radial-gradient(1200px 600px at 20% -10%, rgba(212,175,55,0.28) 0%, transparent 55%), linear-gradient(135deg, #4a1311 0%, #6F1D1B 50%, #2a0d0c 100%)",
         "gradient-surface":
           "linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0) 100%)",
+        "gradient-sidebar-dark":
+          "linear-gradient(180deg, #1c1418 0%, #191114 60%, #141010 100%)",
+        "gradient-sidebar-light":
+          "linear-gradient(180deg, #ffffff 0%, #fafafa 100%)",
+        "shimmer":
+          "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%)",
       },
       keyframes: {
         "fade-in": {
@@ -88,10 +98,25 @@ export default {
           "0%": { opacity: "0", transform: "scale(0.96)" },
           "100%": { opacity: "1", transform: "scale(1)" },
         },
+        shimmer: {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(100%)" },
+        },
+        "slide-down": {
+          "0%": { opacity: "0", transform: "translateY(-10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "glow-pulse": {
+          "0%, 100%": { boxShadow: "0 0 8px rgba(212,175,55,0.2)" },
+          "50%": { boxShadow: "0 0 20px rgba(212,175,55,0.5)" },
+        },
       },
       animation: {
         "fade-in": "fade-in 0.4s ease-out both",
         "scale-in": "scale-in 0.25s ease-out both",
+        shimmer: "shimmer 1.8s ease-in-out infinite",
+        "slide-down": "slide-down 0.22s ease-out both",
+        "glow-pulse": "glow-pulse 3s ease-in-out infinite",
       },
     },
   },

@@ -95,14 +95,14 @@ export default function MultiImageUploadField({
 
   return (
     <div>
-      <label className="mb-1 block text-sm font-medium text-gray-700">
+      <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200 ">
         {label}
       </label>
       <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
         {value.map((url, index) => (
           <div
             key={`${url}-${index}`}
-            className="group relative aspect-square overflow-hidden rounded-xl border border-gray-200 bg-gray-50"
+            className="group relative aspect-square overflow-hidden rounded-xl border border-gray-200 bg-gray-50 dark:bg-dark-950 dark:border-gray-700 "
           >
             <FocalImage
               src={url}
@@ -127,7 +127,7 @@ export default function MultiImageUploadField({
           type="button"
           onClick={() => fileInputRef.current?.click()}
           disabled={uploading || Boolean(currentSrc)}
-          className="flex aspect-square flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50/60 text-gray-400 transition-all duration-200 hover:border-primary-400 hover:bg-primary-50/50 hover:text-primary-700 disabled:opacity-60"
+          className="flex aspect-square flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-gray-300 bg-gray-50/60 text-gray-400 transition-all duration-200 hover:border-primary-400 hover:bg-primary-50/50 hover:text-primary-700 disabled:opacity-60 dark:text-gray-500 dark:bg-dark-900/60 dark:border-gray-700 "
         >
           {uploading || currentSrc ? (
             <Loader2 className="h-5 w-5 animate-spin" />
@@ -150,7 +150,7 @@ export default function MultiImageUploadField({
       />
 
       {(value.length > 0 || queue.length > 0) && (
-        <p className="mt-2 text-xs text-gray-400">
+        <p className="mt-2 text-xs text-gray-400 dark:text-gray-500 ">
           {value.length} photo{value.length === 1 ? "" : "s"} ready
           {queue.length > 0 ? ` · ${queue.length + 1} remaining` : ""}
         </p>
